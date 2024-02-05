@@ -1,0 +1,3 @@
+.glow-secondary {
+  box-shadow: 0 0 3px oklch(var(--s));
+}

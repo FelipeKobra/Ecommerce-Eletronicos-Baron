@@ -1,0 +1,74 @@
+"use client";
+
+import { MouseEvent } from "react";
+
+import formatPrice from "@/utils/Formaters/formatPrice";
+import { AcharProdutosDoCarrinhoType } from "@/utils/interfaces/getPrismaItems/getProductsFromCart";
+import { LocalStorageItem } from "@/utils/providers/LocalStorageProvider";
+
+import CartItemImage from "./CartItemImage";
+import CartItemInfo from "./CartItemInfo";
+import CartItemTotalPrice from "./CartItemTotalPrice";
+import CartQuantityChanger from "./CartQuantityChanger";
+
+
+interface ItemsProps {
+  produtosDoCarrinho: AcharProdutosDoCarrinhoType | null;
+  CartItems: LocalStorageItem[];
+  removerItem: (e: MouseEvent<HTMLButtonElement>) => void;
+}
+
+export default function Items({
+  produtosDoCarrinho,
+  CartItems,
+  removerItem,
+}: ItemsProps) {
+  return (
+    produtosDoCarrinho &&
+    produtosDoCarrinho.length > 0 &&
+    produtosDoCarrinho.map((CartItem) => {
+      CartItem = CartItem!;
+
+      const { item, produto, variavel } = CartItem;
+
+      if (produto && variavel) {
+        return (
+          <div key={produto.id}>
+            <hr />
+            <div
+              className="grid grid-cols-5  items-center text-xl my-4 px-[4rem]"
+              aria-label={`${produto.name}, ${variavel.color}`}
+            >
+              <div className="col-span-2 grid grid-cols-5">
+                <div className="col-span-2 flex justify-center items-center w-full h-full ">
+                  <CartItemImage produto={produto} variavel={variavel} />
+                </div>
+
+                <div className="col-span-3 flex flex-col gap-3 items-start">
+                  <CartItemInfo
+                    produto={produto}
+                    variavel={variavel}
+                    removerItem={removerItem}
+                  />
+                </div>
+              </div>
+
+              <div className="justify-self-center select-none">
+                {formatPrice(variavel.price)}
+              </div>
+              <div className="justify-self-center flex justify-center items-center gap-6">
+                <CartQuantityChanger
+                  quantidade={item.quantity}
+                  color={variavel.color}
+                  productid={produto.id}
+                  stock={variavel.stock}
+                />
+              </div>
+              <CartItemTotalPrice variavel={variavel} CartItems={CartItems} />
+            </div>
+          </div>
+        );
+      }
+    })
+  );
+}

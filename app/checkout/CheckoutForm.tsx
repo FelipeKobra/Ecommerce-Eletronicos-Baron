@@ -1,0 +1,109 @@
+"use client";
+
+import {
+  AddressElement,
+  PaymentElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
+import { useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+
+import { LocalStorageContext } from "@/utils/providers/LocalStorageProvider";
+
+import CheckoutPrice from "./components/CheckoutPrice";
+
+
+
+
+
+
+interface CheckoutFormProps {
+  clientSecret: string;
+  handlePaymentSucess: (value: boolean) => void;
+}
+
+export default function CheckoutForm({
+  clientSecret,
+  handlePaymentSucess,
+}: CheckoutFormProps) {
+  const { setPaymentIntentLocalStorage, removeLocalStorage, cartItems } =
+    useContext(LocalStorageContext);
+  const stripe = useStripe();
+  const elements = useElements();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!stripe) {
+      return;
+    }
+
+    if (!clientSecret || clientSecret.length < 3) {
+      return;
+    }
+    handlePaymentSucess(false);
+  }, [clientSecret, stripe, handlePaymentSucess]);
+
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    setLoading(true);
+
+    const result = await stripe.confirmPayment({
+      elements,
+      redirect: "if_required",
+    });
+    if (!result.error) {
+      toast.success("Pagamento Realizado com Sucesso!");
+      removeLocalStorage();
+      handlePaymentSucess(true);
+      setPaymentIntentLocalStorage(null);
+    } 
+
+
+    setLoading(false);
+  }
+
+  return (
+    <form onSubmit={onSubmit} className="w-3/4 my-[5rem] shadow-2xl p-[5rem] ">
+      <div>
+        <h1 className="text-3xl ">
+          Insira suas informações para finalizar o Checkout
+        </h1>
+      </div>
+      <div>
+        <h2 className="text-xl mt-10 mb-2">Endereço</h2>
+        <AddressElement
+          options={{
+            mode: "shipping",
+            allowedCountries: ["BR"],
+            autocomplete: { mode: "automatic" },
+          }}
+        />
+      </div>
+      <div>
+        <h2 className="text-xl mt-10 mb-2">Informações de Pagamento</h2>
+        <PaymentElement id="payment-card" options={{ layout: "tabs" }} />
+      </div>
+      <div>
+        <CheckoutPrice CartItems={cartItems} />
+      </div>
+      <div className="flex justify-center">
+        <button
+          disabled={loading || !stripe || !elements}
+          className="flex justify-center items-center w-1/2 h-14 mt-6 text-3xl bg-base-content text-base-100 rounded-md hover:bg-success duration-300"
+        >
+          {loading ? (
+            <span className="loading loading-ring loading-lg"></span>
+          ) : (
+            "Realizar Pagamento"
+          )}
+        </button>
+      </div>
+    </form>
+  );
+}
