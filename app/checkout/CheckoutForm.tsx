@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 import { LocalStorageContext } from "@/utils/providers/LocalStorageProvider";
 
 import CheckoutPrice from "./components/CheckoutPrice";
-
+import { useRouter } from "next/navigation";
 
 interface CheckoutFormProps {
   clientSecret: string;
@@ -23,8 +23,8 @@ export default function CheckoutForm({
   clientSecret,
   handlePaymentSucess,
 }: CheckoutFormProps) {
-  const {  removeLocalStorage, cartItems } =
-    useContext(LocalStorageContext);
+  const router = useRouter();
+  const { removeLocalStorage, cartItems } = useContext(LocalStorageContext);
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
@@ -56,8 +56,9 @@ export default function CheckoutForm({
     if (!result.error) {
       toast.success("Pagamento Realizado com Sucesso!");
       removeLocalStorage();
+      localStorage.removeItem("Cart_Intent");
+      window.scrollTo(0, 0);
       handlePaymentSucess(true);
-      localStorage.removeItem("Cart_Intent")
     }
 
     setLoading(false);

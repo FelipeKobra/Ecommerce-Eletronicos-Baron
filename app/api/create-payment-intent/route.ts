@@ -103,6 +103,7 @@ export async function POST(req: Request) {
         if (!current_intent) return noCurrentIntent();
 
         try {
+          console.log("aqui");
           return await updatePaymentIntentAndOrder({
             payment_intent_id: current_intent.id,
             FloatTotal,
