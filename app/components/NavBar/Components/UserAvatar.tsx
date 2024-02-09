@@ -12,13 +12,14 @@ import { signOut } from "next-auth/react";
 import { UserQueryResult } from "@/utils/interfaces/getPrismaItems/getCurrentUser";
 
 import ImageChange from "./ImageChange/ImageChange";
-
+import { useRouter } from "next/navigation";
 
 export default function UserAvatar({
   currentUser,
 }: {
   currentUser: UserQueryResult | null;
 }) {
+  const router = useRouter();
   let imagem =
     "https://t4.ftcdn.net/jpg/03/49/49/79/360_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.webp";
 
@@ -57,7 +58,13 @@ export default function UserAvatar({
             </li>
           )}
           <hr />
-          <li onClick={() => signOut()}>
+          <li
+            onClick={() => {
+              signOut();
+              localStorage.removeItem("Cart_Intent");
+              router.push("/");
+            }}
+          >
             <Link href="/">
               <LogoutIcon /> Sair
             </Link>

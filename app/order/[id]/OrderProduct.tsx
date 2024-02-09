@@ -11,7 +11,7 @@ interface OrderItemProps {
 
 export default function OrderProduct({ item }: OrderItemProps) {
   return (
-    <div className="grid md:grid-rows-1 md:grid-cols-5 my-4 md:my-0 rounded-lg border-2 md:border-0 text-2xl md:text-md gap-4 border-t[1.5px] border-base-content py-4 items-center ">
+    <div className="grid md:grid-rows-1 md:grid-cols-5 my-4 md:my-0 rounded-lg border-2 md:border-0 text-2xl md:text-base gap-4 border-t[1.5px] border-base-content py-4 items-center ">
 
 
       <div className="col-span-2 justify-self-center md:justify-self-start flex flex-col md:flex-row gap-2 ">
@@ -27,7 +27,7 @@ export default function OrderProduct({ item }: OrderItemProps) {
         </div>
         <div className="text-center md:text-start justify-self-center md:justify-self-start">
           <p className="px-4">{truncateNames(item.name)}</p>
-          <p>{item.color} </p>
+          <p className="px-4">{item.color} </p>
         </div>
       </div>
 

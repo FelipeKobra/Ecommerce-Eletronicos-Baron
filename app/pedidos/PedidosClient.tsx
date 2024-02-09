@@ -11,8 +11,8 @@ import { OrdersByUserIdType } from "@/utils/interfaces/getPrismaItems/getOrdersB
 import getPedidosColumns from "./data/getPedidosColumns";
 import getPedidosRows from "./data/getPedidosRows";
 
-
 import "moment/locale/pt-br";
+import NoData from "../components/NoData";
 
 export default function PedidosClient({
   orders,
@@ -20,6 +20,7 @@ export default function PedidosClient({
   orders: OrdersByUserIdType;
 }) {
   const router = useRouter();
+  console.log
 
   const MOBILE_COLUMNS = useMemo(() => {
     return {
@@ -57,16 +58,27 @@ export default function PedidosClient({
 
   return (
     <div className="mt-10 mb-3 w-full flex flex-col items-center gap-4">
-      <div className="text-4xl mt-8 font-semibold text-center">
-        <h1>Pedidos</h1>
-      </div>
-      <div className="w-10/12 h-[100svh] overflow-auto ">
-        <CustomDataGrid
-          rows={getPedidosRows(orders)}
-          columns={getPedidosColumns({ router })}
-          columnVisibilityModel={columnVisible}
+      {(!orders || orders.length === 0) && (
+        <NoData
+          title="Você não possui pedidos"
+          subtitle="Mas não tem problema, sempre há uma primeira vez!"
+          link="/"
         />
-      </div>
+      )}
+      {orders && orders.length > 0 && (
+        <>
+          <div className="text-4xl mt-8 font-semibold text-center">
+            <h1>Pedidos</h1>
+          </div>
+          <div className="w-10/12 h-[100svh] overflow-auto ">
+            <CustomDataGrid
+              rows={getPedidosRows(orders)}
+              columns={getPedidosColumns({ router })}
+              columnVisibilityModel={columnVisible}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }

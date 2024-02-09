@@ -1,6 +1,3 @@
-
-
-
 import { OrderItem, PaymentStatus } from "@prisma/client";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -14,7 +11,6 @@ import noCurrentIntent from "./functions/noCurrentIntent";
 import noExistingOrder from "./functions/noExistingOrder";
 import updatePaymentIntentAndOrder from "./functions/updatePaymentIntentAndOrder";
 import updateProductDetails from "./functions/updateProductDetails";
-
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2023-10-16",
@@ -73,9 +69,8 @@ export async function POST(req: Request) {
   };
 
   if (payment_intent_id) {
-    const current_intent = await stripe.paymentIntents.retrieve(
-      payment_intent_id
-    );
+    const current_intent =
+      await stripe.paymentIntents.retrieve(payment_intent_id);
 
     if (!current_intent) return noCurrentIntent();
 
@@ -98,7 +93,7 @@ export async function POST(req: Request) {
       const existingOrder = await prisma.order.findFirst({
         where: { userId: currentUser.id, status: PaymentStatus.Pendente },
       });
-      console.log(existingOrder)
+      console.log(existingOrder);
 
       if (existingOrder) {
         const current_intent = await stripe.paymentIntents.retrieve(

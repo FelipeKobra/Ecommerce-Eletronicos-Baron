@@ -21,14 +21,8 @@ export default async function page() {
   }
 
   const orders = await getOrdersByUserId(user.id);
-
-  if (!orders) {
-    <NoData
-      title="Sem pedidos na conta?"
-      subtitle="Sem problema! Visite nossa loja"
-      link="/"
-    />;
-  }
+  console.log(user.id)
+  console.log(orders)
 
   return (
     <div className="w-full h-full mx-auto ">

@@ -7,20 +7,24 @@ export interface getProductsProps {
   searchTerm?: string | null;
   take?: number | null;
   dateOrder?: "asc" | "desc" | null;
+  selling?: true | false | null;
 }
 
 export default async function getProducts(params: getProductsProps) {
   try {
-    const { category, searchTerm, take, dateOrder } = params;
+    const { category, searchTerm, take, dateOrder, selling } = params;
     let searchString = searchTerm;
-
 
     if (!searchString) {
       searchString = "";
     }
 
     let query: any = {};
-    query.selling = true;
+
+    if (selling) {
+      query.selling = selling;
+    }
+
     if (category) {
       query.category = category;
     }

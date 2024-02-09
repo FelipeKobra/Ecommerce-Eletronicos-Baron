@@ -11,7 +11,6 @@ import ProductsArray from "./components/Home/Products/ProductsArray";
 import NoData from "./components/NoData";
 import SwiperCarousel from "./components/SwiperCarousel";
 
-
 interface HomeProps {
   searchParams: getProductsProps;
 }
@@ -20,11 +19,12 @@ export default async function Home({ searchParams }: HomeProps) {
   let take: undefined | number = undefined;
   if (Object.keys(searchParams).length <= 0) take = 15;
   const [produtos, lancamentos, destaques] = await Promise.all([
-    getProducts({ ...searchParams, take: take }),
+    getProducts({ ...searchParams, take: take, selling: true }),
     getProducts({
       ...searchParams,
       take: 15,
       dateOrder: "desc",
+      selling: true,
     }),
     getHighlightProducts(),
   ]);

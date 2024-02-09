@@ -106,7 +106,7 @@ export default function SearchInput() {
           type="submit"
           className="h-full w-1/3 bg-base-content hover:bg-primary duration-300 text-base-100 rounded-lg rounded-l-none "
         >
-          Search
+          Procurar
         </button>
       </form>
       <div className="absolute w-full flex flex-col z-50">

@@ -20,13 +20,16 @@ export async function getHighlightProducts() {
     const topProductIds = topProductsData.map((product) => product.productId);
 
     const topProductsArray = await prisma.product.findMany({
-      where: { id: { in: topProductIds } },
+      where: { id: { in: topProductIds }, selling: true },
       include: { ProductVariable: true },
     });
 
     if (topProductsArray.length < 15) {
       const additionalProducts = await prisma.product.findMany({
-        where: { id: { notIn: topProductsArray.map((product) => product.id) } },
+        where: {
+          id: { notIn: topProductsArray.map((product) => product.id) },
+          selling: true,
+        },
         include: { ProductVariable: true },
         take: 15 - topProductsArray.length,
       });
