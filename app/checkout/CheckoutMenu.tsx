@@ -53,13 +53,12 @@ export default function CheckoutMenu() {
         const data = await response.json();
         setClientSecret(data.paymentIntent.client_secret);
         setPaymentIntentLocalStorage(data.paymentIntent.id);
+        abortController.abort();
+        setLoading(false);
       } catch (error) {
         if (!abortController.signal.aborted) {
           setError(true);
           console.log(error);
-        }
-      } finally {
-        if (!abortController.signal.aborted) {
           setLoading(false);
         }
       }
@@ -69,12 +68,10 @@ export default function CheckoutMenu() {
       fetchData();
     }
 
-    // Cleanup function
-    return function cleanup() {
+    return () => {
       abortController.abort();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router, setPaymentIntentLocalStorage]);
+  }, [cartItems, paymentIntent, router, setPaymentIntentLocalStorage]);
 
   const options: StripeElementsOptions = {
     clientSecret,
