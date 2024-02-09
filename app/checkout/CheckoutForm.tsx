@@ -23,7 +23,7 @@ export default function CheckoutForm({
   clientSecret,
   handlePaymentSucess,
 }: CheckoutFormProps) {
-  const { setPaymentIntentLocalStorage, removeLocalStorage, cartItems } =
+  const {  removeLocalStorage, cartItems } =
     useContext(LocalStorageContext);
   const stripe = useStripe();
   const elements = useElements();
@@ -57,7 +57,7 @@ export default function CheckoutForm({
       toast.success("Pagamento Realizado com Sucesso!");
       removeLocalStorage();
       handlePaymentSucess(true);
-      setPaymentIntentLocalStorage(null);
+      localStorage.removeItem("Cart_Intent")
     }
 
     setLoading(false);
