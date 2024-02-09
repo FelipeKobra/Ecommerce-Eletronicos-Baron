@@ -23,7 +23,7 @@ export default function CheckoutMenu() {
 
   const { cartItems, paymentIntent, setPaymentIntentLocalStorage, tema } =
     useContext(LocalStorageContext);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [clientSecret, setClientSecret] = useState("");
   const [paymentSucess, setPaymentSucess] = useState(false);
@@ -65,7 +65,7 @@ export default function CheckoutMenu() {
       }
     };
 
-    if (cartItems) {
+    if (cartItems && cartItems.length > 0) {
       fetchData();
     }
 
@@ -106,7 +106,10 @@ export default function CheckoutMenu() {
       {error && <CheckoutError />}
       {!paymentSucess && !error && loading && <LoadingScreen />}
       {!error && paymentSucess && <PaymentSuccess />}
-      {!loading && !error && !paymentSucess && !cartItems && <CheckoutNoItem />}
+      {!loading &&
+        !error &&
+        !paymentSucess &&
+        (!cartItems || cartItems.length === 0) && <CheckoutNoItem />}
     </div>
   );
 }

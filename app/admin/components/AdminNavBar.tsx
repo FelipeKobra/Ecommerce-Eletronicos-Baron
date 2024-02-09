@@ -5,12 +5,11 @@ import { MdAnalytics, MdBorderColor, MdInventory } from "react-icons/md";
 
 import AdminNavItem from "./AdminNavItem";
 
-
 export default function AdminNavBar() {
   const pathname = usePathname();
   return (
-    <div className="w-full h-[4rem] bg-base-200 flex justify-center items-center">
-      <div className="grid grid-cols-4 gap-8 justify-center items-center w-1/2 h-full">
+    <div className="w-full md:h-[4rem] bg-base-200 flex justify-center items-center">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 justify-center items-center w-full md:w-3/4 xl:w-1/2 h-full">
         <AdminNavItem
           icon={MdAnalytics}
           label="Sumário"

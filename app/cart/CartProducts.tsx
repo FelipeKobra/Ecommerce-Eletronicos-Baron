@@ -1,6 +1,6 @@
 "use client";
 
-import { MouseEvent, useContext, useEffect, useState } from "react";
+import { MouseEvent, useContext, useEffect, useRef, useState } from "react";
 
 import AcharProdutosDoCarrinho, {
   AcharProdutosDoCarrinhoType,
@@ -31,24 +31,32 @@ export default function CartProducts({ user }: { user: boolean }) {
   const [produtosDoCarrinho, setProdutosDoCarrinho] =
     useState<AcharProdutosDoCarrinhoType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const CartItemsCountRef = useRef(CartItems && CartItems.length);
 
   //Pegar todos os preços e stock da DB e relacionar com os itens do carrinho
+  // First useEffect to fetch data
   useEffect(() => {
-    if (CartItems && isLoading) {
-      (async function handleProdutosDoCarrinho() {
+    (async function handleProdutosDoCarrinho() {
+      if (CartItems && CartItems.length > 0) {
+        if (CartItemsCountRef.current !== CartItems.length) {
+          setIsLoading(true);
+          CartItemsCountRef.current = CartItems.length;
+        }
         try {
           const produtosDoCarrinhoTemp: AcharProdutosDoCarrinhoType =
-            await AcharProdutosDoCarrinho({ CartItems: CartItems });
-
+            await AcharProdutosDoCarrinho({ CartItems });
           setProdutosDoCarrinho(produtosDoCarrinhoTemp);
-          setIsLoading(false);
         } catch (error) {
+          console.error("Error Cart Products:", error);
+        } finally {
           setIsLoading(false);
-          console.error("Error when handling produtosDoCarrinho: ", error);
         }
-      })();
-    }
-  }, [CartItems, isLoading]);
+      } else {
+        // No items, so we are not loading
+        setIsLoading(false);
+      }
+    })();
+  }, [CartItems]);
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -59,7 +67,7 @@ export default function CartProducts({ user }: { user: boolean }) {
   }
 
   return (
-    <div className="px-[2rem]">
+    <div className="px-[2rem] my-14">
       <div className="text-center my-5">
         <h1 className="text-5xl">Carrinho</h1>
       </div>
@@ -70,18 +78,24 @@ export default function CartProducts({ user }: { user: boolean }) {
         CartItems={CartItems}
       />
       <hr className="my-4" />
-      <div className="grid grid-cols-2 px-[4rem]">
-        <div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 md:px-[4rem]">
+        <div className="hidden lg:block">
           <ClearCartBtn
             cartSize={cartVolume}
             removeStorage={removeLocalStorage}
           />
         </div>
-        <div>
+        <div className="flex lg:justify-end">
           <CartForms
             produtosDoCarrinho={produtosDoCarrinho}
             CartItems={CartItems}
             user={user}
+          />
+        </div>
+        <div className="block lg:hidden pt-10">
+          <ClearCartBtn
+            cartSize={cartVolume}
+            removeStorage={removeLocalStorage}
           />
         </div>
       </div>

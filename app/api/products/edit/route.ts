@@ -80,7 +80,6 @@ export async function POST(req: Request) {
 //Esse caminho é feito para troca de imagens
 export async function PUT(req: Request) {
   const user = await getCurrentUser();
-  const storage = getStorage(firebaseApp);
 
   if (!user || user.role !== "ADMIN") {
     return NextResponse.error();

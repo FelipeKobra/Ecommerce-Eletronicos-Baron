@@ -1,8 +1,8 @@
 import NoData from "@/app/components/NoData";
 import getProductById from "@/utils/interfaces/getPrismaItems/getProductById";
 
-import ProductDetails from "./components/ProductDetails";
 import ProductReviews from "./components/ProductReviews";
+import ProductDetails from "./components/ProductDetails";
 
 
 export interface ParamsProductProps {

@@ -1,4 +1,5 @@
 "use client";
+
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LoginIcon from "@mui/icons-material/Login";
@@ -8,13 +9,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 
-import { currentUserType } from "@/utils/types/types";
+import { UserQueryResult } from "@/utils/interfaces/getPrismaItems/getCurrentUser";
+
+import ImageChange from "./ImageChange/ImageChange";
 
 
 export default function UserAvatar({
   currentUser,
 }: {
-  currentUser: currentUserType | null;
+  currentUser: UserQueryResult | null;
 }) {
   let imagem =
     "https://t4.ftcdn.net/jpg/03/49/49/79/360_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.webp";
@@ -24,9 +27,8 @@ export default function UserAvatar({
   }
 
   return (
-    <div className="dropdown dropdown-bottom dropdown-end dropdown-hover z-50">
-      <div className="avatar cursor-pointer">
-        {" "}
+    <div className="my-auto pr-3 md:pr-0 dropdown dropdown-bottom dropdown-end lg:dropdown-hover z-50">
+      <div tabIndex={0} role="button" className=" avatar cursor-pointer">
         <div className="w-10 rounded-full ring ring-primary">
           <Image
             src={imagem}
@@ -41,9 +43,11 @@ export default function UserAvatar({
         <ul className="p-2 shadow menu dropdown-content  bg-base-100 rounded-box w-52">
           <li>
             <Link href="/pedidos">
-              {" "}
               <LocalOfferIcon /> Pedidos
             </Link>
+          </li>
+          <li>
+            <ImageChange user={currentUser} />
           </li>
           {currentUser.role === "ADMIN" && (
             <li>
@@ -55,7 +59,7 @@ export default function UserAvatar({
           <hr />
           <li onClick={() => signOut()}>
             <Link href="/">
-              <LogoutIcon /> Deslogar
+              <LogoutIcon /> Sair
             </Link>
           </li>
         </ul>
@@ -63,12 +67,12 @@ export default function UserAvatar({
         <ul className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52">
           <li>
             <Link href="/login">
-              <LoginIcon /> Login
+              <LoginIcon /> Entrar
             </Link>
           </li>
           <li>
             <Link href="/register">
-              <VpnKeyIcon /> Registre-se
+              <VpnKeyIcon /> Registrar-se
             </Link>
           </li>
         </ul>

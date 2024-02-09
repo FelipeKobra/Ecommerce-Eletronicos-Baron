@@ -4,20 +4,19 @@ import DangerousRoundedIcon from "@mui/icons-material/DangerousRounded";
 
 interface ProductButton {
   isAdded: boolean;
+  selling: boolean;
   stock: number;
-  cartQuantity:number;
+  cartQuantity: number;
   addToCart: () => void;
 }
 
 export default function ProductButton({
   isAdded,
+  selling,
   stock,
   cartQuantity,
   addToCart,
 }: ProductButton) {
-
-
-
   if (cartQuantity === stock || cartQuantity > stock) {
     if (stock === 0) {
       return <div></div>;
@@ -34,13 +33,13 @@ export default function ProductButton({
         </>
       );
     }
-  } else if (stock > 0 ) {
+  } else if (stock > 0 && selling) {
     return (
       <>
         {!isAdded ? (
           <button
             onClick={addToCart}
-            className="bg-base-content text-base-100 rounded-md h-[3rem] w-[22rem] hover:bg-primary duration-300"
+            className="bg-base-content text-base-100 rounded-md h-[3rem] w-full hover:bg-primary duration-300"
           >
             Adicionar ao Carrinho
           </button>
@@ -49,10 +48,19 @@ export default function ProductButton({
             <CheckCircleRoundedIcon
               className="text-success mr-4"
               fontSize="large"
-            />{" "}
+            />
             <p className="text-lg"> Produto Adicionado ao Carrinho</p>
           </div>
         )}
+      </>
+    );
+  } else if (!selling) {
+    return (
+      <>
+        <div className="flex items-center">
+          <DangerousRoundedIcon className="text-error mr-4" fontSize="large" />{" "}
+          <p className="text-lg"> Produto Não está À Venda</p>
+        </div>
       </>
     );
   } else {

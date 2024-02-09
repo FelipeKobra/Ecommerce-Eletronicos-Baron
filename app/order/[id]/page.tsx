@@ -17,7 +17,7 @@ export default async function page({ params }: { params: IParams }) {
 
   const userOrder = user?.Orders.find((pedido) => pedido.id === order?.id);
 
-  if (!userOrder || user?.role !== "ADMIN")
+  if (!userOrder && user?.role !== "ADMIN")
     return (
       <NoData
         title="Acesso não Autorizado"

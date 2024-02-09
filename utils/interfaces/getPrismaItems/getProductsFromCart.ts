@@ -3,9 +3,7 @@ import axios from "axios";
 
 import { LocalStorageItem } from "@/utils/providers/LocalStorageProvider";
 
-import { ProductType, getProductById } from "./getProductById";
-
-
+import { ProductType } from "./getProductById";
 
 
 interface AcharProdutosDoCarrinhoProps {

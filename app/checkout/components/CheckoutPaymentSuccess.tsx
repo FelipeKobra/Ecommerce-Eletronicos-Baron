@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function CheckoutPaymentSuccess() {
   return (
-    <div className="flex flex-col items-center justify-center h-full">
+    <div className="flex flex-col items-center justify-center min-h-[70svh] h-full">
       <h1 className="text-center text-3xl text-base-content select-none">
         Pagamento Realizado com <span className="text-success inline-block animate-bounce">Sucesso</span>
             

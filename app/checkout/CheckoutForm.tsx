@@ -14,10 +14,6 @@ import { LocalStorageContext } from "@/utils/providers/LocalStorageProvider";
 import CheckoutPrice from "./components/CheckoutPrice";
 
 
-
-
-
-
 interface CheckoutFormProps {
   clientSecret: string;
   handlePaymentSucess: (value: boolean) => void;
@@ -62,18 +58,30 @@ export default function CheckoutForm({
       removeLocalStorage();
       handlePaymentSucess(true);
       setPaymentIntentLocalStorage(null);
-    } 
-
+    }
 
     setLoading(false);
   }
 
   return (
-    <form onSubmit={onSubmit} className="w-3/4 my-[5rem] shadow-2xl p-[5rem] ">
+    <form
+      onSubmit={onSubmit}
+      className="w-11/12 md:w-10/12 lg:w-3/4 my-[5rem] shadow-2xl p-[2rem] lg:p-[5rem] "
+    >
       <div>
         <h1 className="text-3xl ">
           Insira suas informações para finalizar o Checkout
         </h1>
+        <div className="opacity-55">
+          <p>
+            Não utilize informações reais, já que é um projeto que não visa
+            vender os respectivos produtos
+          </p>
+          <p className="pb-1 pt-4">Utilize as informações de Cartão abaixo: </p>
+          <p>Nº 4242 4242 4242 4242</p>
+          <p>Validade: 4/44</p>
+          <p>CVC: 444</p>
+        </div>
       </div>
       <div>
         <h2 className="text-xl mt-10 mb-2">Endereço</h2>
@@ -95,7 +103,7 @@ export default function CheckoutForm({
       <div className="flex justify-center">
         <button
           disabled={loading || !stripe || !elements}
-          className="flex justify-center items-center w-1/2 h-14 mt-6 text-3xl bg-base-content text-base-100 rounded-md hover:bg-success duration-300"
+          className="flex justify-center items-center w-10/12 md:w-3/4 lg:w-1/2 h-14 mt-6 text-lg md:text-xl lg:text-3xl bg-base-content text-base-100 rounded-md hover:bg-success duration-300"
         >
           {loading ? (
             <span className="loading loading-ring loading-lg"></span>

@@ -53,7 +53,6 @@ export default async function handleImage({
     await axios.put("/api/products/edit", sendData);
     toast.success("Imagem Alterada");
     router.refresh();
-    router.refresh();
   } catch (error) {
     console.error(error);
   }

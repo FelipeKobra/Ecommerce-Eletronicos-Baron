@@ -1,12 +1,14 @@
-import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
+
+import { signUpSchemaType } from "../types/signUpSchema";
 
 interface FormInput {
   type: string;
   placeholder: string;
-  register: UseFormRegister<FieldValues>;
-  errors: FieldErrors<FieldValues>;
+  register: UseFormRegister<signUpSchemaType>;
+  errors: FieldErrors<signUpSchemaType>;
   errorMessage: any;
-  id: string;
+  id: keyof signUpSchemaType;
 }
 
 export default function FormInput({
@@ -28,7 +30,11 @@ export default function FormInput({
         }`}
         {...register(`${id}`)}
       />
-      {errors[id] && <p className="text-error select-none text-xl font-semibold">{errorMessage}</p>}
+      {errors[id] && (
+        <p className="text-error select-none text-xl font-semibold">
+          {errorMessage}
+        </p>
+      )}
     </>
   );
 }

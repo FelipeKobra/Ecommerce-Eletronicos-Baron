@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { categories } from "@/data/categories";
 
 import Categoria from "./Categoria";
-
+import { Suspense } from "react";
 
 export default function NavCategories() {
   const params = useSearchParams();
@@ -17,15 +17,16 @@ export default function NavCategories() {
   return (
     <div className={`w-full grid grid-cols-7 bg-neutral`}>
       {categories.map((categoria) => (
-        <Categoria
-          key={categoria.label}
-          label={categoria.label}
-          Icon={categoria.Icon}
-          selecionada={
-            category === categoria.label ||
-            (category === null && categoria.label === "Geral")
-          }
-        />
+        <Suspense key={categoria.label}>
+          <Categoria
+            label={categoria.label}
+            Icon={categoria.Icon}
+            selecionada={
+              category === categoria.label ||
+              (category === null && categoria.label === "Geral")
+            }
+          />
+        </Suspense>
       ))}
     </div>
   );

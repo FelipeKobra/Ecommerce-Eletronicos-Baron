@@ -19,23 +19,40 @@ export default function getManageColumns({
   handleImage,
 }: getManageColumnsProps) {
   const columns: GridColDef[] = [
-    { field: "product_id", headerName: "ID", width: 230, editable: true },
-    { field: "name", headerName: "Nome", width: 180 },
-    { field: "category", headerName: "Categoria", width: 110, editable: true },
-    { field: "brand", headerName: "Marca", width: 110, editable: true },
+    {
+      field: "product_id",
+      headerName: "ID",
+      minWidth: 220,
+      editable: true,
+    },
+    { field: "name", headerName: "Nome", width: 240 },
+    {
+      field: "category",
+      headerName: "Categoria",
+      minWidth: 100,
+      flex: 0.5,
+      editable: true,
+    },
+    {
+      field: "brand",
+      headerName: "Marca",
+      minWidth: 120,
+      flex: 0.5,
+      editable: true,
+    },
     {
       field: "color",
       headerName: "Cor",
-      width: 140,
+      minWidth: 130,
       renderCell(params) {
         return <ManageColor params={params} />;
       },
     },
-    { field: "price", headerName: "Preço", width: 140, editable: true },
+    { field: "price", headerName: "Preço", minWidth: 120, editable: true },
     {
       field: "quantity",
       headerName: "Estoque",
-      width: 100,
+      minWidth: 80,
       editable: true,
       renderCell: (params) => {
         return <ManageStock params={params} />;
@@ -44,7 +61,7 @@ export default function getManageColumns({
     {
       field: "selling",
       headerName: "À venda",
-      width: 180,
+      minWidth: 180,
       renderCell: (params) => {
         return <ManageSelling params={params} />;
       },
@@ -52,7 +69,8 @@ export default function getManageColumns({
     {
       field: "image",
       headerName: "Imagem",
-      width: 100,
+      minWidth: 80,
+      flex: 0.5,
       renderCell(params) {
         return (
           <ManageImage
@@ -71,7 +89,8 @@ export default function getManageColumns({
     {
       field: "action",
       headerName: "Acões",
-      width: 200,
+      minWidth: 200,
+      flex: 1,
       renderCell: (params) => {
         return (
           <ManageAction

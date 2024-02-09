@@ -1,8 +1,8 @@
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
-import moment from "moment";
-import Image from "next/image";
 import "moment/locale/pt-br";
 import { Rating } from "@mui/material";
+import moment from "moment";
+import Image from "next/image";
 
 import { ProductType } from "@/utils/interfaces/getPrismaItems/getProductById";
 
@@ -16,12 +16,12 @@ interface UsersRatingProps {
 export default function UsersRating({ reviews }: UsersRatingProps) {
   if (reviews && reviews.length > 0)
     return (
-      <div className="w-full flex flex-col gap-4 my-5">
-        <hr className="w-1/3" />
-        <h2 className="text-3xl font-medium mb-6">Análises dos Consumidores</h2>
+      <div className=" flex flex-col gap-4 w-11/12 md:w-9/12 lg:w-1/2 my-4 pl-4">
+        <hr className="w-full"/>
+        <h2 className="text-3xl font-medium mb-6 ">Análises dos Consumidores</h2>
         {reviews.map((review) => {
           return (
-            <div key={review.id} className="flex flex-col gap-2">
+            <div key={review.id} className="flex flex-col gap-2 w-full">
               <div className="flex gap-5  items-center">
                 {review.user.image && review.user.image.length > 2 ? (
                   <Image
@@ -45,10 +45,10 @@ export default function UsersRating({ reviews }: UsersRatingProps) {
                 <Rating readOnly value={review.rating} />
               </div>
 
-              <div className="w-1/2">
+              <div className="w-full">
                 <p>{review.comment}</p>
               </div>
-              <hr className="w-1/3 mt-4" />
+              <hr className="w-full mt-4" />
             </div>
           );
         })}

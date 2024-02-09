@@ -1,7 +1,5 @@
 import { FieldErrors, UseFormRegister } from "react-hook-form";
-
-import { AddForm } from "../../../AddMenu";
-
+import { AddForm } from "../../zodConfig/schemas";
 
 interface IndividualPriceProps {
   index: number;

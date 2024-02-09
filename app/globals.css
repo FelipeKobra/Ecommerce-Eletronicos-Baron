@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.row {
-  @apply flex flex-wrap;
-}
-
 .glow-primary {
   box-shadow: 0 0 10px oklch(var(--p));
 }
@@ -13,5 +9,91 @@
 .glow-secondary {
   box-shadow: 0 0 10px oklch(var(--s));
 }
+.embla {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
+.embla__viewport {
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.embla__container {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+}
+
+.embla__slide {
+  flex: 0 0 auto;
+  min-width: 0;
+  max-width: 100%;
+  margin-right: 10px;
+}
+
+.embla__prev {
+  position: absolute;
+  left: 0;
+}
+
+.embla__next {
+  position: absolute;
+  right: 0;
+}
+
+/* Small devices (landscape phones, 640px and up) */
+@media (min-width: 640px) {
+  .embla__container {
+    grid-auto-columns: 50%;
+  }
+
+  .embla__prev {
+    left: -1.4rem;
+  }
+  .embla__next {
+    right: -1.4rem;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .embla__container {
+    grid-auto-columns: 33.33%;
+  }
+
+  .embla__prev {
+    left: -1.8rem;
+  }
+  .embla__next {
+    right: -1.8rem;
+  }
+}
+
+/* Large devices (desktops, 1024px and up) */
+@media (min-width: 1024px) {
+  .embla__container {
+    grid-auto-columns: 25%;
+  }
+
+  .embla__prev {
+    left: -2.5rem;
+  }
+  .embla__next {
+    right: -2.5rem;
+  }
+}
+
+/* Extra large devices (large desktops, 1280px and up) */
+@media (min-width: 1280px) {
+  .embla__container {
+    grid-auto-columns: 20%;
+  }
+
+}
 

@@ -1,14 +1,9 @@
-import { GridRenderCellParams, GridTreeNodeWithRender } from "@mui/x-data-grid";
 import { DeliveryStatus } from "@prisma/client";
 import React from "react";
 
 import { PascalName } from "@/utils/Formaters/formatName";
 
-export default function OrdersDeliveryStatus({
-  params,
-}: {
-  params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
-}) {
+export default function OrdersDeliveryStatus({ params }: { params: any }) {
   return (
     <div
       className={`font-bold w-full py-1 rounded bg-rose-200 text-rose-700 ${

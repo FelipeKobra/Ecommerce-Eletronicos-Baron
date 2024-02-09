@@ -1,7 +1,5 @@
 "use client";
 
-
-
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
@@ -12,18 +10,14 @@ import { LocalStorageContext } from "@/utils/providers/LocalStorageProvider";
 import HorizontalRuleDesc from "./ProductDetails/HorizontalRuleDesc";
 import ProductButton from "./ProductDetails/ProductButton";
 import ProductColorSelector from "./ProductDetails/ProductColorSelector";
+import ProductDescription from "./ProductDetails/ProductDescription";
 import ProductImage from "./ProductDetails/ProductImage";
 import ProductInfo from "./ProductDetails/ProductInfo";
 import ProductRating from "./ProductDetails/ProductRating";
 import ProductTitle from "./ProductDetails/ProductTitle";
 import QuantityChanger from "./ProductDetails/QuantityChanger";
 
-
-
-
-
 export default function ProductDetails({ produto }: { produto: ProductType }) {
-  produto = produto!;
   //Context And CartQuantity Declare
   const { getLocalStorage, setCartLocalStorage, cartVolume } =
     useContext(LocalStorageContext);
@@ -56,6 +50,9 @@ export default function ProductDetails({ produto }: { produto: ProductType }) {
       setCartQuantity(0);
       return;
     }
+
+    if (!produto) return;
+
     // Encontra o produto com a mesma ID e cor no carrinho
     const produtoNoCarrinho = productsInCart.find(
       (e) => e.productId === produto.id && e.color === variavelAtual.color
@@ -80,50 +77,40 @@ export default function ProductDetails({ produto }: { produto: ProductType }) {
   //Router
   const router = useRouter();
 
-  return (
+ if(produto) return (
     <div className="w-full grid grid-cols-2 my-8">
-      <div className="flex justify-center my-auto items-center m-8 rounded-lg">
-        <ProductImage
-          imagens={imagens}
-          imageIndex={imageIndex}
-          name={produto.name}
-        />
-      </div>
+      <ProductImage
+        imagens={imagens}
+        imageIndex={imageIndex}
+        name={produto.name}
+      />
 
-      <div className="flex flex-col gap-4">
+      <div className="col-span-2 lg:col-span-1 px-10 lg:p-0 my-10 lg:m-0 flex flex-col gap-4">
         <ProductTitle name={produto.name} price={variavelAtual.price} />
-        <div className="flex items-center">
-          <ProductRating notaFinal={notaFinalProduto} notas={notasProduto} />
-        </div>
+        <ProductRating notaFinal={notaFinalProduto} notas={notasProduto} />
+        <ProductDescription produto={produto} />
+        <ProductInfo
+          categoria={produto.category}
+          brand={produto.brand}
+          stock={variavelAtual.stock}
+        />
         <HorizontalRuleDesc />
-        <p className="w-10/12">{produto.description}</p>
+        <ProductColorSelector
+          variaveis={variaveis}
+          imageIndex={imageIndex}
+          setImageIndex={setImageIndex}
+        />
         <HorizontalRuleDesc />
-        <div className="flex flex-col gap-4">
-          <ProductInfo
-            categoria={produto.category}
-            brand={produto.brand}
-            stock={variavelAtual.stock}
-          />
-        </div>
-        <HorizontalRuleDesc />
-        <div className="flex items-center gap-4">
-          <ProductColorSelector
-            imagens={variaveis}
-            imageIndex={imageIndex}
-            setImageIndex={setImageIndex}
-          />
-        </div>
-        <HorizontalRuleDesc />
-        <div className="flex items-center gap-4 h-14">
-          <QuantityChanger
-            quantidade={quantidade}
-            stock={variavelAtual.stock}
-            setQuantidade={setQuantidade}
-            cartQuantity={cartQuantity}
-          />
-        </div>
-        <div className="mt-5 h-14">
+        <QuantityChanger
+          selling={produto.selling}
+          quantidade={quantidade}
+          stock={variavelAtual.stock}
+          setQuantidade={setQuantidade}
+          cartQuantity={cartQuantity}
+        />
+        <div className="mt-5 h-14 w-full sm:w-10/12 md:w-1/2">
           <ProductButton
+            selling={produto.selling}
             cartQuantity={cartQuantity}
             isAdded={isAdded}
             addToCart={addToCart}

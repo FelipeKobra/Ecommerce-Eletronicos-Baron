@@ -1,5 +1,5 @@
 
-import { ProductReview } from "@prisma/client";
+import { DeliveryStatus, ProductReview } from "@prisma/client";
 
 import { UserQueryResult } from "../interfaces/getPrismaItems/getCurrentUser";
 import { ProductType } from "../interfaces/getPrismaItems/getProductById";
@@ -19,13 +19,15 @@ export default function checkAuthToReview({
 
   const pedidoEntregue = user?.Orders.some(
     (pedido) =>
-      pedido.products.find((produto) => produto.id === product.id) &&
-      pedido.deliveryStatus === "Entregue"
+      pedido.products.find((produto) => produto.productId === product.id) &&
+      pedido.deliveryStatus === DeliveryStatus.Entregue
   );
 
   const userReview = product.ProductReview.find((review: ProductReview) => {
     return review.userId === user.id;
   });
+
+  
 
   if (userReview || !pedidoEntregue) {
     return false;

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 
 interface QuantityChanger {
+  selling: boolean;
   quantidade: number;
   cartQuantity: number;
   stock: number;
@@ -14,7 +15,7 @@ export default function QuantityChanger({
   quantidade,
   cartQuantity,
   stock,
-
+  selling,
   setQuantidade,
 }: QuantityChanger) {
   const quantidadeTotal = quantidade + cartQuantity;
@@ -48,9 +49,9 @@ export default function QuantityChanger({
     } else {
       return;
     }
-  } else if (stock > 0) {
+  } else if (stock > 0 && selling) {
     return (
-      <>
+      <div className="flex items-center gap-4 h-14">
         <p className="text-lg font-bold mr-5">Quantidade</p>
         <button
           name="diminuir"
@@ -70,7 +71,7 @@ export default function QuantityChanger({
         {stock === quantidadeTotal && (
           <p className="text-error">Limite do Estoque Atingido</p>
         )}
-      </>
+      </div>
     );
   } else {
     return;

@@ -1,7 +1,5 @@
-
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { DataGrid } from "@mui/x-data-grid";
-import * as React from "react";
 
 const CustomDataGrid = (props: any) => {
   const theme = createTheme({
@@ -32,15 +30,12 @@ const CustomDataGrid = (props: any) => {
   return (
     <ThemeProvider theme={theme}>
       <DataGrid
-        className="w-10/12  text-center flex justify-center my-6 bg-base-100 text-base-content shadow-xl"
-        initialState={{
-          pagination: {
-            paginationModel: { page: 5, pageSize: 10 },
-          },
-        }}
-        pageSizeOptions={[5, 15]}
+        experimentalFeatures={{ newEditingApi: true }}
+        className="text-center w-full bg-base-100 text-base-content shadow-xl"
+        pageSize={10}
+        rowsPerPageOptions={[10]}
         checkboxSelection
-        disableRowSelectionOnClick
+        disableSelectionOnClick
         autoHeight
         {...props}
       />

@@ -1,13 +1,8 @@
-import { GridRenderCellParams, GridTreeNodeWithRender } from "@mui/x-data-grid";
 import { PaymentStatus } from "@prisma/client";
 
 import { PascalName } from "@/utils/Formaters/formatName";
 
-export default function OrdersPaymentStatus({
-  params,
-}: {
-  params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
-}) {
+export default function OrdersPaymentStatus({ params }: { params: any }) {
   return (
     <div
       className={`font-bold w-full py-1 rounded ${

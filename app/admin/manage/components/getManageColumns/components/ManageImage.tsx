@@ -1,4 +1,3 @@
-import { GridRenderCellParams, GridTreeNodeWithRender } from "@mui/x-data-grid";
 import { FirebaseStorage } from "firebase/storage";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import Image from "next/image";
@@ -7,12 +6,13 @@ import ImageInput from "@/app/components/ImageInput";
 
 import { handleImageParams } from "../../../utils/handleImage";
 
+
 interface ManageImageProps {
   router: AppRouterInstance;
   storage: FirebaseStorage;
   imageFile: File | null;
   removeBg: boolean;
-  params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
+  params: any,
   setImageFile: (file: File | null) => void;
   setRemoveBg: (value: boolean) => void;
   handleImage({
@@ -57,13 +57,14 @@ export default function ManageImage({
               src={params.row.image}
               alt={`${params.row.name} Imagem`}
               fill
+              className="object-contain"
             />
           </div>
           <div>
             <form
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
-                handleImage({
+                await handleImage({
                   data: {
                     image: imageFile as File,
                     imagePath: params.row.imagePath,

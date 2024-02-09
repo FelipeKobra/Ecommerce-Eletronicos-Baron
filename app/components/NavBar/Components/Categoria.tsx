@@ -44,14 +44,16 @@ export default function Categoria({
   return (
     <div
       onClick={handleClick}
-      className={`mx-5 flex justify-center items-center text-center gap-1 p-3 border-b-4 hover:text-white duration-300 cursor-pointer ${
+      className={` flex justify-center items-center text-center gap-1 p-3 border-b-4 hover:text-white duration-300 cursor-pointer ${
         selecionada
           ? "border-primary text-white"
           : "border-transparent text-neutral-content"
       }`}
     >
-      <Icon size={20} />
-      <p className="font-medium text-md">{formatCategoryName(label)}</p>
+      <Icon size={20} className="" />
+      <p className="font-medium text-md hidden xl:block ">
+        {formatCategoryName(label)}
+      </p>
     </div>
   );
 }

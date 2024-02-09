@@ -36,15 +36,15 @@ export default function Items({
           <div key={produto.id}>
             <hr />
             <div
-              className="grid grid-cols-5  items-center text-xl my-4 px-[4rem]"
+              className="grid grid-cols-2 lg:grid-cols-5 justify-center items-center text-2xl lg:text-xl my-4 lg:px-[4rem]"
               aria-label={`${produto.name}, ${variavel.color}`}
             >
-              <div className="col-span-2 grid grid-cols-5">
-                <div className="col-span-2 flex justify-center items-center w-full h-full ">
+              <div className="col-span-2 grid grid-cols-1 lg:grid-cols-5 text-center lg:text-start">
+                <div className="col-span-2 flex justify-center  w-full h-full ">
                   <CartItemImage produto={produto} variavel={variavel} />
                 </div>
 
-                <div className="col-span-3 flex flex-col gap-3 items-start">
+                <div className="col-span-2 flex flex-col gap-3  lg:items-start">
                   <CartItemInfo
                     produto={produto}
                     variavel={variavel}
@@ -53,10 +53,10 @@ export default function Items({
                 </div>
               </div>
 
-              <div className="justify-self-center select-none">
+              <div className="col-span-2 lg:col-span-1 py-8 text-2xl sm:text-3xl md:text-3xl lg:text-xl lg:p-0 justify-self-center select-none">
                 {formatPrice(variavel.price)}
               </div>
-              <div className="justify-self-center flex justify-center items-center gap-6">
+              <div className="col-span-2 sm:col-span-1 justify-self-center flex justify-center items-center gap-6 text-2xl sm:text-3xl md:text-3xl lg:text-xl">
                 <CartQuantityChanger
                   quantidade={item.quantity}
                   color={variavel.color}
@@ -64,7 +64,10 @@ export default function Items({
                   stock={variavel.stock}
                 />
               </div>
-              <CartItemTotalPrice variavel={variavel} CartItems={CartItems} />
+              <div className="py-6 sm:py-0 col-span-2 sm:col-span-1 flex gap-1 justify-center text-center lg:text-start text-2xl sm:text-3xl md:text-3xl lg:text-xl">
+                <p className="lg:hidden">TOTAL:</p>
+                <CartItemTotalPrice variavel={variavel} CartItems={CartItems} />
+              </div>
             </div>
           </div>
         );

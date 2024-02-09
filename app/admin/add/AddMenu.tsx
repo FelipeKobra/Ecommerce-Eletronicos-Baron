@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
+
 import { categories } from "@/data/categories";
 
 import AddFormButton from "./components/AddFormButton";
@@ -14,7 +15,8 @@ import IndividualValues from "./components/IndividualValues/IndividualValues";
 import RemoveImageBg from "./components/RemoveImageBg";
 import { schema, AddForm } from "./components/zodConfig/schemas";
 import { variables } from "./data/variables";
-import onSubmit from "./utils/onSubmit";
+import onSubmit from "./utils/onSubmitAdd";
+
 
 
 export const maxPrice = 1000000;
@@ -73,9 +75,9 @@ export default function AddMenu() {
   const currentLengthTA = watch("description");
 
   return (
-    <div className="w-4/5 my-[3rem]">
+    <div className="w-11/12 md:w-10/12 xl:w-3/5 my-[3rem]">
       <form
-        className="flex flex-col shadow-2xl rounded-xl my-4 mx-[13rem] py-8 px-[5rem] gap-5 "
+        className="flex flex-col shadow-2xl rounded-xl my-4   py-8 px-[2rem] md:px-[5rem] gap-5 "
         onSubmit={handleSubmit(handleOnSubmit)}
       >
         <FormInputs
@@ -84,7 +86,7 @@ export default function AddMenu() {
           register={register}
         />
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {categories.map(({ label, Icon }) => {
             return (
               <CategoriesCard
@@ -132,7 +134,7 @@ export default function AddMenu() {
             setIndividualStock={setIndividualStock}
           />
         </div>
-        <div className="grid grid-cols-2 justify-center items-center gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 justify-center items-center gap-6">
           {fields.map((field, index) => (
             <div key={index}>
               <ColorPicker

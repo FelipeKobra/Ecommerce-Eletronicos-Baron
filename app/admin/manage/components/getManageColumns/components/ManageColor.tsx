@@ -1,11 +1,6 @@
-import { GridRenderCellParams, GridTreeNodeWithRender } from "@mui/x-data-grid";
 import React from "react";
 
-export default function ManageColor({
-  params,
-}: {
-  params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
-}) {
+export default function ManageColor({ params }: { params: any }) {
   return (
     <div className="flex gap-2 w-full h-full">
       <p className="self-center text-start flex-1">{params.row.color}</p>

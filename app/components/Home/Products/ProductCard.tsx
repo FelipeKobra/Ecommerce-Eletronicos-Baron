@@ -4,12 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-import styles from "./ProductCard.module.css";
-import checkNewProduct from "./utils/checkNewProduct";
 
 import truncateNames from "@/utils/Formaters/formatName";
 import formatPrice from "@/utils/Formaters/formatPrice";
 import { ProductArrayType } from "@/utils/interfaces/getPrismaItems/getProducts";
+
+import styles from "./ProductCard.module.css";
+import checkNewProduct from "./utils/checkNewProduct";
 
 interface ProductCardProps {
   produto: ProductArrayType[0];
@@ -24,19 +25,19 @@ export default function ProductCard({ produto }: ProductCardProps) {
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="card w-11/12 h-[28rem] bg-base-100 shadow-xl hover:shadow-2xl duration-150"
+      className={`card w-full h-[29rem] bg-base-100 shadow-xl hover:shadow-2xl duration-150 }`}
     >
       <Link href={"/produto/" + produto.id}>
         <div
           className={`flex flex-col bg-white duration-300 rounded-md  ${
-            isHovered ? "opacity-100" : "opacity-75"
+            isHovered ? "opacity-100" : "opacity-85"
           }`}
         >
-          <figure className="h-[17rem] ">
+          <figure className="h-[14rem] relative m-2">
             <Image
-              className="rounded-lg hover:scale-110 duration-300"
-              width={170}
-              height={160}
+              className="rounded-lg w-auto hover:scale-110 duration-300 p-[9.5rem]  sm:p-12"
+              width={150}
+              height={140}
               src={primeiraVariavel.image}
               alt={`Imagem do Produto:${nomeTruncado}`}
             />
@@ -50,9 +51,9 @@ export default function ProductCard({ produto }: ProductCardProps) {
           )}
         </div>
       </Link>
-      <div className="flex flex-col gap-4 my-3 text-center justify-center items-center">
+      <div className="flex flex-col h-[12rem] mx-2 gap-4 my-3 text-center justify-center items-center">
         <Link href={"/produto/" + produto.id}>
-          <h2 className="card-title text-xl font-medium block text-base-content ">
+          <h2 className="card-title text-xl min-h-14 font-medium block text-base-content ">
             {nomeTruncado}
             <br />
           </h2>
@@ -62,7 +63,10 @@ export default function ProductCard({ produto }: ProductCardProps) {
           {formatPrice(primeiraVariavel.price)}
         </p>
 
-        <Link className="w-11/12" href={"/produto/" + produto.id}>
+        <Link
+          className="w-11/12 justify-self-end"
+          href={"/produto/" + produto.id}
+        >
           <button className="btn btn-primary w-full text-lg">Compre Já!</button>
         </Link>
       </div>

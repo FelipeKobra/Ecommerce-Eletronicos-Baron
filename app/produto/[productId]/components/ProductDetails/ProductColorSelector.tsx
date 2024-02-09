@@ -1,27 +1,24 @@
-import { v4 } from "uuid";
-
-import { imagemProduto } from "@/utils/types/types";
-
+import { variaveis } from "./types/variaveis";
 
 interface ProductColorSelector {
-  imagens: imagemProduto[];
+  variaveis: variaveis[];
   imageIndex: number;
   setImageIndex: (index: number) => void;
 }
 
 export default function ProductColorSelector({
-  imagens,
+  variaveis,
   imageIndex,
   setImageIndex,
 }: ProductColorSelector) {
   return (
-    <>
+    <div className="flex items-center gap-4">
       <p className="font-bold text-lg">Cores</p>
-      {imagens.map((e, index: number) => {
-        const nomeCor = e.color;
-        const codigoCor = e.colorCode;
+      {variaveis.map((variavel, index: number) => {
+        const nomeCor = variavel.color;
+        const codigoCor = variavel.colorCode;
         return (
-          <div key={v4()} className="tooltip" data-tip={nomeCor}>
+          <div key={variavel.id} className="tooltip" data-tip={nomeCor}>
             <button
               onClick={() => setImageIndex(index)}
               style={{ backgroundColor: `${codigoCor}` }}
@@ -32,6 +29,6 @@ export default function ProductColorSelector({
           </div>
         );
       })}
-    </>
+    </div>
   );
 }

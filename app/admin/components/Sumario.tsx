@@ -3,13 +3,14 @@
 import { User } from "@prisma/client";
 import { useEffect, useState } from "react";
 
+
+
 import { formatNumber } from "@/utils/Formaters/formatNumber";
 import formatPrice from "@/utils/Formaters/formatPrice";
 import { OrdersQueryResult } from "@/utils/interfaces/getPrismaItems/getOrders";
 import { ProductArrayType } from "@/utils/interfaces/getPrismaItems/getProducts";
 
 import AdminHeading from "./AdminHeading";
-
 
 
 interface SumarioProps {
@@ -101,14 +102,14 @@ export default function Sumario({ pedidos, produtos, users }: SumarioProps) {
                 key={key}
                 className="rounded-xl border-2 p-4 flex flex-col items-center gap-2 transition"
               >
-                <div className="text-xl md:text-4xl font-bold">
+                <div className=" text-xl md:text-4xl font-bold">
                   {key === "vendas" ? (
                     <>{formatPrice(digit)}</>
                   ) : (
                     <>{formatNumber(digit)}</>
                   )}
                 </div>
-                <p>{label}</p>
+                <p className="text-center md:text-start">{label}</p>
               </div>
             );
           })}

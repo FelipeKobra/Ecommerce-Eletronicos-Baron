@@ -1,11 +1,6 @@
-import { GridRenderCellParams, GridTreeNodeWithRender } from "@mui/x-data-grid";
 import React from "react";
 
-export default function ManageStock({
-  params,
-}: {
-  params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
-}) {
+export default function ManageStock({ params }: { params: any }) {
   return (
     <div
       className={`font-bold w-full py-1 rounded ${

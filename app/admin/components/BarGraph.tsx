@@ -43,5 +43,5 @@ export default function BarGraph({ data }: BarGraphProps) {
     scales: { y: { beginAtZero: true } },
   };
 
-  return <Bar data={chartData} options={options}></Bar>;
+  return <Bar className="my-10" data={chartData} options={options}></Bar>;
 }

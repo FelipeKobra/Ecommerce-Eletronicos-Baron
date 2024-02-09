@@ -9,7 +9,11 @@ export default function truncateNames(name: string) {
   }
 }
 
-export function PascalName(name: string) {
-  const text = _.startCase(_.toLower(name));
-  return text
+export function PascalName(name: string | null) {
+  if (name) {
+    const text = _.startCase(_.toLower(name));
+    return text;
+  } else {
+    return;
+  }
 }

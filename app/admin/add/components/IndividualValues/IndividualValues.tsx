@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect } from "react";
 
-import IndividualPrice from "./components/individualPrice";
 import IndividualStock from "./components/IndividualStock";
 import { handleCheckedProps } from "./types/IndividualValuesProps";
 import handleValues from "./utils/handleValues";
+import IndividualPrice from "./components/IndividualPrice";
 
 export default function IndividualValues({
   maxPrice,

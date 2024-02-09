@@ -7,11 +7,6 @@ import PedidoClient from "./PedidosClient";
 
 import NoData from "../components/NoData";
 
-
-
-
-
-
 export default async function page() {
   const user = await getCurrentUser();
 
@@ -36,7 +31,7 @@ export default async function page() {
   }
 
   return (
-    <div className="w-11/12 h-full mx-auto ">
+    <div className="w-full h-full mx-auto ">
       <PedidoClient orders={orders} />
     </div>
   );

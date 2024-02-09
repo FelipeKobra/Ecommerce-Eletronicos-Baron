@@ -8,7 +8,6 @@ import formatPrice from "@/utils/Formaters/formatPrice";
 import { AcharProdutosDoCarrinhoType } from "@/utils/interfaces/getPrismaItems/getProductsFromCart";
 import { LocalStorageItem } from "@/utils/providers/LocalStorageProvider";
 
-
 interface CartForms {
   user: boolean;
   CartItems: LocalStorageItem[];
@@ -41,14 +40,14 @@ export default function CartForms({
   }, [CartItems, produtosDoCarrinho]);
 
   return (
-    <div className="flex flex-col gap-4 items-end justify-center ">
-      <div className="flex justify-between w-1/2 text-2xl font-semibold">
+    <div className="flex flex-col gap-4  justify-center w-full lg:w-3/4 xl:w-1/2 ">
+      <div className="flex gap-8 xl:gap-0 justify-between w-full text-2xl font-semibold">
         <p>Subtotal</p>
         <p>{formatPrice(totalPrice)}</p>
       </div>
 
-      <p className="w-1/2">Impostos e frete calculados no Checkout</p>
-      <Link className="w-1/2 h-[3rem]" href={user ? "/checkout" : "login"}>
+      <p className="w-full text-sm">Impostos e frete calculados no Checkout</p>
+      <Link className="w-full h-[3rem]" href={user ? "/checkout" : "login"}>
         <button
           className={`h-full w-full rounded-md text-xl ${
             user
@@ -56,10 +55,10 @@ export default function CartForms({
               : "border-solid border-4 bg-base-100 text-base-content hover:scale-110 duration-300"
           }`}
         >
-          {user ? "Checkout" : "Realize o Login"}
+          {user ? "Finalizar compra" : "Realize o Login"}
         </button>
       </Link>
-      <Link className="w-1/2 text-primary" href="/">
+      <Link className="w-full text-primary" href="/">
         <ArrowBackIcon /> Continue as Compras{" "}
       </Link>
     </div>

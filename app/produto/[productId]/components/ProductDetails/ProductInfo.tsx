@@ -6,7 +6,7 @@ interface ProductInfo {
 
 export default function ProductInfo({ categoria, brand, stock }: ProductInfo) {
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <p>
         <span className="text-base-content text-lg font-bold">Categoria:</span>{" "}
         {categoria}
@@ -18,6 +18,6 @@ export default function ProductInfo({ categoria, brand, stock }: ProductInfo) {
       <p className={stock > 0 ? "text-green-400" : "text-red-400"}>
         {stock > 0 ? "Em Estoque: " + stock  : "Fora de Estoque"}
       </p>
-    </>
+    </div>
   );
 }

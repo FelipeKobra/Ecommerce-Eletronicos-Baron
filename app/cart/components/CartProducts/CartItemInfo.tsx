@@ -29,7 +29,7 @@ export default function CartItemInfo({
         onClick={removerItem}
         name={variavel.color}
         value={produto.id}
-        className="link-hover link-error"
+        className="text-error link-hover link-error self-center lg:self-start w-full sm:w-1/2 md:w-1/4 lg:w-auto h-[3rem] lg:h-auto"
         aria-label={`Remover produto ${produto.name}`}
       >
         Remover

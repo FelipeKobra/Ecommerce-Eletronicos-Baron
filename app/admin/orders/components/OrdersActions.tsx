@@ -1,4 +1,3 @@
-import { GridRenderCellParams, GridTreeNodeWithRender } from "@mui/x-data-grid";
 import { DeliveryStatus } from "@prisma/client";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import {
@@ -12,7 +11,7 @@ import ActionBtn from "../../manage/components/ActionBtn";
 
 interface OrdersActionsProps {
   router: AppRouterInstance;
-  params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
+  params: any;
   handleDeliveryStatus(
     id: string,
     router: AppRouterInstance,

@@ -4,9 +4,10 @@ import { Toaster } from "react-hot-toast";
 
 import LocalStorageProvider from "@/utils/providers/LocalStorageProvider";
 
+import Container from "./components/Container";
 import Footer from "./components/Footer/Footer";
 import NavBar from "./components/NavBar/NavBar";
-
+import { Suspense } from "react";
 
 const poppins = Poppins({
   weight: ["300", "400", "500", "600", "700"],
@@ -35,9 +36,11 @@ export default function RootLayout({
           }}
         />
         <LocalStorageProvider>
-          <NavBar />
-          <main className="flex-grow flex flex-col ">{children}</main>
-          <Footer />
+          <Container>
+            <NavBar />
+            <main className="flex-grow flex flex-col ">{children}</main>
+            <Footer />
+          </Container>
         </LocalStorageProvider>
       </body>
     </html>

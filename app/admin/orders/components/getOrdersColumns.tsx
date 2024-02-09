@@ -20,8 +20,8 @@ export default function getOrdersColumns({
 }: getOrdersColumnsProps) {
   const columns: GridColDef[] = [
     { field: "order_id", headerName: "ID", width: 200 },
-    { field: "client", headerName: "Cliente", width: 180 },
-    { field: "amount", headerName: "Total", width: 140 },
+    { field: "client", headerName: "Cliente", minWidth: 120 },
+    { field: "amount", headerName: "Total", minWidth: 130 },
     {
       field: "paymentStatus",
       headerName: "Status do Pagamento",

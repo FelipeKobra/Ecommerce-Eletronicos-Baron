@@ -1,4 +1,3 @@
-import { GridRenderCellParams, GridTreeNodeWithRender } from "@mui/x-data-grid";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { MdCached, MdDelete, MdRemoveRedEye } from "react-icons/md";
 
@@ -6,7 +5,7 @@ import ActionBtn from "../../ActionBtn";
 
 interface ManageActionProps {
   router: AppRouterInstance;
-  params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>;
+  params: any;
   handleStock(
     id: string,
     isSelling: boolean,
