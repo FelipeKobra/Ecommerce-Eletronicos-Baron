@@ -1,4 +1,4 @@
-import { OrderItem, PaymentStatus } from "@prisma/client";
+import { OrderItem } from "@prisma/client";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -31,7 +31,14 @@ export async function POST(req: Request) {
     payment_intent_id,
   }: { items: OrderItem[]; payment_intent_id: string | null } = body;
 
-  await updateProductDetails(items).catch((error) => console.error(error));
+  try {
+    await updateProductDetails(items);
+  } catch (error:any) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 400 }
+    );
+  }
 
   const itemTotalPrice = items
     .map((item) => item.price * item.quantity)
@@ -39,6 +46,7 @@ export async function POST(req: Request) {
 
   const total = Math.round(itemTotalPrice * 100);
   if (total === 0) {
+    console.log("aqui");
     return NextResponse.json(
       { error: "O carrinho está vazio" },
       { status: 400 }
@@ -95,7 +103,6 @@ export async function POST(req: Request) {
       const existingOrder = await prisma.order.findFirst({
         where: { userId: currentUser.id, status: "Pendente" },
       });
-      console.log(existingOrder);
 
       if (existingOrder && existingOrder !== null) {
         const current_intent = await stripe.paymentIntents.retrieve(
@@ -105,7 +112,6 @@ export async function POST(req: Request) {
         if (!current_intent) return noCurrentIntent();
 
         try {
-          console.log("aqui");
           return await updatePaymentIntentAndOrder({
             payment_intent_id: current_intent.id,
             FloatTotal,

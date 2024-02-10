@@ -21,7 +21,12 @@ export default async function RegisterFormOnSubmit({
   setIsLoading(true);
 
   try {
-    await axios.post("/api/register", formValues);
+    const response = await axios.post("/api/register", formValues);
+
+    if (response.data.error) {
+      toast.error(response.data.error);
+      return router.refresh();
+    }
 
     toast.success("Conta Criada com sucesso! 😉");
     const callBack = await signIn("credentials", {

@@ -1,10 +1,6 @@
 import { OrderItem } from "@prisma/client";
 
-import {
-  ProductType,
-  getProductById,
-} from "@/utils/interfaces/getPrismaItems/getProductById";
-
+import { getProductById } from "@/utils/interfaces/getPrismaItems/getProductById";
 
 export default async function updateProductDetails(items: OrderItem[]) {
   for (const item of items) {
@@ -23,10 +19,14 @@ export default async function updateProductDetails(items: OrderItem[]) {
       throw new Error("Produto não encontrado");
     }
 
+    if (item.quantity > variavel.stock) {
+      throw new Error(
+        `Quantidade de Produtos acima do permitido no item: ${produto.name}`
+      );
+    }
+
     item.name = produto.name;
     item.price = variavel.price;
     item.image = variavel.image;
   }
 }
-
-

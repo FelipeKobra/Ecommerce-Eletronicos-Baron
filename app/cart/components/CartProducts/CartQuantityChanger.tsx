@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 
 import { LocalStorageContext } from "@/utils/providers/LocalStorageProvider";
 
-
 interface QuantityChanger {
   productid: string;
   stock: number;
@@ -18,20 +17,37 @@ export default function CartQuantityChanger({
   color,
   quantidade,
 }: QuantityChanger) {
-  const { updateCartQuantity, setCartLocalStorage } =
-    useContext(LocalStorageContext);
+  const {
+    cartVolume,
+    getLocalStorage,
+    updateCartQuantity,
+    setCartLocalStorage,
+  } = useContext(LocalStorageContext);
 
   const [quantity, setQuantity] = useState(quantidade);
 
   useEffect(() => {
-    if (quantity <= 0) {
+    const cartQuantity = getLocalStorage()?.find(
+      (item) => item.productId === productid
+    )?.quantity;
+
+    if (quantity <= 0 || (cartQuantity && cartQuantity <= 0)) {
       setCartLocalStorage({ color, productId: productid, quantity: 1 });
-      setQuantity(1)
-    } else if (quantity > stock) {
-      setCartLocalStorage({ color, productId: productid, quantity: stock });
-      setQuantity(stock)
+      setQuantity(1);
     }
-  }, [color, productid, quantity, setCartLocalStorage, stock]);
+    if (quantity > stock || (cartQuantity && cartQuantity > stock)) {
+      setCartLocalStorage({ color, productId: productid, quantity: stock });
+      setQuantity(stock);
+    }
+  }, [
+    color,
+    productid,
+    stock,
+    quantity,
+    cartVolume,
+    setCartLocalStorage,
+    getLocalStorage,
+  ]);
 
   function alterarQuantidade(e: React.MouseEvent<HTMLButtonElement>) {
     const sinal = (e.target as HTMLButtonElement).name;
@@ -43,7 +59,7 @@ export default function CartQuantityChanger({
           quantity: quantity - 1,
           inputName: "rmv",
         });
-        setQuantity(quantity - 1)
+        setQuantity(quantity - 1);
       }
     } else if (quantity < stock) {
       updateCartQuantity({
@@ -52,7 +68,7 @@ export default function CartQuantityChanger({
         quantity: quantity + 1,
         inputName: "add",
       });
-      setQuantity(quantity + 1)
+      setQuantity(quantity + 1);
     } else {
       toast.error("Limite do Estoque Atingido", { id: "CartLimit" });
     }

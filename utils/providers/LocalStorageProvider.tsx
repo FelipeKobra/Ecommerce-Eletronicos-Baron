@@ -105,7 +105,7 @@ const LocalStorageProvider = ({ children }: { children: React.ReactNode }) => {
           item.productId === value.productId && item.color === value.color
       );
       if (existingIndex !== -1) {
-        items[existingIndex].quantity += value.quantity;
+        items[existingIndex].quantity = value.quantity;
       } else {
         items.push(value);
       }

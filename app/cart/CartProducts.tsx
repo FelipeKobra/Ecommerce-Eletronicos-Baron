@@ -14,8 +14,11 @@ import Items from "./components/CartProducts/Items";
 import NoItemPage from "./components/CartProducts/NoItemPage";
 
 import LoadingScreen from "../components/LoadingScreen";
+import { useRouter } from "next/navigation";
 
 export default function CartProducts({ user }: { user: boolean }) {
+  const router = useRouter();
+
   const {
     cartItems: CartItems,
     cartVolume,
@@ -26,6 +29,7 @@ export default function CartProducts({ user }: { user: boolean }) {
   const removeItemHandler = (e: MouseEvent<HTMLButtonElement>) => {
     const { name: cor, value: productId } = e.target as HTMLButtonElement;
     removeItem?.(productId, cor);
+    router.refresh();
   };
 
   const [produtosDoCarrinho, setProdutosDoCarrinho] =

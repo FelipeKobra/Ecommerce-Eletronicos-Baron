@@ -13,6 +13,7 @@ import CheckoutNoItem from "./components/CheckoutNoItems";
 import PaymentSuccess from "./components/CheckoutPaymentSuccess";
 
 import LoadingScreen from "../components/LoadingScreen";
+import toast from "react-hot-toast";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
@@ -46,10 +47,16 @@ export default function CheckoutMenu() {
           }),
         });
 
-        console.log(response)
-
+       
         if (response.status === 401) {
+          toast.error("Verifique se está logado e tente novamente");
           return router.push("/login");
+        }
+
+        if (response.status === 400) {
+          const data = await response.json()
+          toast.error(data.error);
+          return router.push("/cart");
         }
 
         const data = await response.json();
@@ -57,11 +64,12 @@ export default function CheckoutMenu() {
         setPaymentIntentLocalStorage(data.paymentIntent.id);
         abortController.abort();
         setLoading(false);
-      } catch (error) {
+      } catch (error: any) {
         if (!abortController.signal.aborted) {
-          console.log(error);
+          console.log(error as string);
+          toast.error(error as string);
           setLoading(false);
-          setError(true)
+          setError(true);
         }
       }
     };
@@ -73,9 +81,7 @@ export default function CheckoutMenu() {
     return () => {
       abortController.abort();
     };
-  
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [cartItems, paymentIntent, router, setPaymentIntentLocalStorage]);
 
   const options: StripeElementsOptions = {
     clientSecret,

@@ -2,7 +2,6 @@ import Stripe from "stripe";
 
 import prisma from "@/libs/prismaDb";
 
-
 export default async function findExistingOrder(
   actualIntent: Stripe.Response<Stripe.PaymentIntent>
 ) {
@@ -11,9 +10,8 @@ export default async function findExistingOrder(
       where: { payment_intent_id: actualIntent.id },
     });
 
-
     return existingOrder;
-  } catch (error:any) {
+  } catch (error: any) {
     throw new Error(error);
   }
 }
