@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Utility Section */
+
 .glow-primary {
   box-shadow: 0 0 10px oklch(var(--p));
 }
@@ -9,6 +11,8 @@
 .glow-secondary {
   box-shadow: 0 0 10px oklch(var(--s));
 }
+
+/* Embla Carousel Section */
 .embla {
   position: relative;
   display: flex;
@@ -45,6 +49,19 @@
 .embla__next {
   position: absolute;
   right: 0;
+}
+
+/* Data Grid Section */
+.MuiDataGrid-root {
+  color: oklch(var(--bc)) !important;
+}
+
+.MuiSvgIcon-root {
+  color: oklch(var(--bc)) !important;
+}
+
+.MuiTablePagination-displayedRows {
+  color: oklch(var(--bc)) !important;
 }
 
 /* Small devices (landscape phones, 640px and up) */
@@ -94,6 +111,4 @@
   .embla__container {
     grid-auto-columns: 20%;
   }
-
 }
-

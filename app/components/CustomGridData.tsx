@@ -11,23 +11,6 @@ const CustomDataGrid = (props: any) => {
       checkboxSelection
       disableSelectionOnClick
       autoHeight
-      sx={{
-        "& .MuiDataGrid-root": {
-          color: "oklch(var(--bc)) !important",
-        },
-        "& .MuiTablePagination-root": {
-          color: "oklch(var(--bc)) !important",
-        },
-        "& .MuiTablePagination-selectIcon": {
-          color: "oklch(var(--bc)) !important",
-        },
-        "& .MuiTablePagination-spacer": {
-          color: "oklch(var(--bc)) !important",
-        },
-        "& .MuiCheckbox-root": {
-          color: "oklch(var(--bc)) !important",
-        },
-      }}
       {...props}
     />
   );
