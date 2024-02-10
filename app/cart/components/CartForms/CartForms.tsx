@@ -59,7 +59,7 @@ export default function CartForms({
         </button>
       </Link>
       <Link className="w-full text-primary" href="/">
-        <ArrowBackIcon /> Continue as Compras{" "}
+        <ArrowBackIcon /> Continuar Comprando
       </Link>
     </div>
   );

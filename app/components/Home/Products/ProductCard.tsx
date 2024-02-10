@@ -35,7 +35,7 @@ export default function ProductCard({ produto }: ProductCardProps) {
         >
           <figure className="h-[14rem] relative m-2">
             <Image
-              className="rounded-lg w-auto hover:scale-110 duration-300 p-[9.5rem]  sm:p-12"
+              className="rounded-lg w-auto hover:scale-110 duration-300 p-[6rem]  sm:p-12"
               width={150}
               height={140}
               src={primeiraVariavel.image}

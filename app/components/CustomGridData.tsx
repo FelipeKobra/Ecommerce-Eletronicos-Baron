@@ -1,5 +1,5 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid,ptBR } from "@mui/x-data-grid";
 
 const CustomDataGrid = (props: any) => {
   const theme = createTheme({
@@ -20,7 +20,7 @@ const CustomDataGrid = (props: any) => {
       MuiCheckbox: {
         styleOverrides: {
           root: {
-            color: "oklch(var(--bc)) !important", // Define your custom color for the checkbox
+            color: "oklch(var(--bc)) !important",
           },
         },
       },
@@ -32,6 +32,7 @@ const CustomDataGrid = (props: any) => {
       <DataGrid
         experimentalFeatures={{ newEditingApi: true }}
         className="text-center w-full bg-base-100 text-base-content shadow-xl"
+        localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
         pageSize={10}
         rowsPerPageOptions={[10]}
         checkboxSelection

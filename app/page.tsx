@@ -68,7 +68,7 @@ export default async function Home({ searchParams }: HomeProps) {
             <SwiperCarousel produtos={lancamentos} />
           </div>
 
-          <div className="w-11/12 relative flex flex-col">
+          <div className="w-11/12 relative flex flex-col ">
             <div className="flex gap-1 absolute top-0 left-0 text-3xl">
               <MdShoppingBasket className="text-primary" />
               <p>MAIS VENDIDOS</p>
@@ -81,7 +81,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <div className="w-11/12 relative justify-center items-center flex flex-col">
         {!Object.keys(searchParams).length && (
-          <div className="flex gap-1 absolute top-0 left-0 text-3xl">
+          <div className="flex  gap-1 absolute top-0 left-0 text-2xl sm:text-3xl">
             <MdCheckCircle className="text-primary" />
             <p>MELHORES DO MERCADO</p>
           </div>

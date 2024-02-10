@@ -13,6 +13,7 @@ import { UserQueryResult } from "@/utils/interfaces/getPrismaItems/getCurrentUse
 
 import ImageChange from "./ImageChange/ImageChange";
 import { useRouter } from "next/navigation";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 export default function UserAvatar({
   currentUser,
@@ -26,6 +27,8 @@ export default function UserAvatar({
   if (currentUser && currentUser.image) {
     imagem = currentUser.image;
   }
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("md"));
 
   return (
     <div className="my-auto pr-3 md:pr-0 dropdown dropdown-bottom dropdown-end lg:dropdown-hover z-50">
@@ -47,9 +50,13 @@ export default function UserAvatar({
               <LocalOfferIcon /> Pedidos
             </Link>
           </li>
-          <li>
-            <ImageChange user={currentUser} />
-          </li>
+
+          {matches && (
+            <li>
+              <ImageChange user={currentUser} />
+            </li>
+          )}
+
           {currentUser.role === "ADMIN" && (
             <li>
               <Link href="/admin">

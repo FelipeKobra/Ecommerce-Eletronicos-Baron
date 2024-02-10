@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function CheckoutNoItem() {
   return (
-    <div className="text-center w-1/2  mx-auto my-[20rem] text-4xl alert alert-info">
+    <div className="text-center w-full md:w-1/2  mx-auto my-[20rem] text-4xl alert alert-info">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

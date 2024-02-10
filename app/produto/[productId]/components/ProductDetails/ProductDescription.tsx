@@ -11,7 +11,7 @@ export default function ProductDescription({
   return (
     <>
       <HorizontalRuleDesc />
-      <p className={`w-10/12 max-h-[15rem] overflow-y-auto`}>{produto.description}</p>
+      <p className={`w-full px-4 md:px-0 border-x-2 md:border-x-0 border-opacity-40 md:w-10/12 max-h-[15rem] overflow-y-auto`}>{produto.description}</p>
       <HorizontalRuleDesc />
     </>
   );

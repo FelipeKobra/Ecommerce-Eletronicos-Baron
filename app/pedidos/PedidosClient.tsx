@@ -47,7 +47,7 @@ export default function PedidosClient({
   }, []);
 
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("sm"));
+  const matches = useMediaQuery(theme.breakpoints.up("md"));
 
   const [columnVisible, setColumnVisible] = useState(ALL_COLUMNS);
 
@@ -70,7 +70,7 @@ export default function PedidosClient({
           <div className="text-4xl mt-8 font-semibold text-center">
             <h1>Pedidos</h1>
           </div>
-          <div className="w-10/12 h-[100svh] overflow-auto ">
+          <div className="w-full md:w-11/12 lg:w-10/12 h-[100svh] overflow-auto ">
             <CustomDataGrid
               rows={getPedidosRows(orders)}
               columns={getPedidosColumns({ router })}

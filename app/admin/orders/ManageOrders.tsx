@@ -48,7 +48,7 @@ export default function ManageOrders({
   }, []);
 
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("sm"));
+  const matches = useMediaQuery(theme.breakpoints.up("md"));
 
   const [columnVisible, setColumnVisible] = useState(ALL_COLUMNS);
 
@@ -60,7 +60,7 @@ export default function ManageOrders({
   return (
     <div className="my-12 flex flex-col items-center">
       <AdminHeading title="Gerenciamento dos Pedidos" />
-      <div className="w-11/12 h-[100svh] flex flex-col justify-center items-center">
+      <div className="w-full md:w-11/12 h-[100svh] flex flex-col justify-center items-center">
         <CustomDataGrid
           rows={getOrdersRows(orders)}
           columns={getOrdersColumns({ router, handleDeliveryStatus })}

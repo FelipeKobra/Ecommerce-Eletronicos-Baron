@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect } from "react";
 import { themeChange } from "theme-change";
 
@@ -12,7 +13,7 @@ function SwitchTheme() {
       <div>
         <select
           data-choose-theme
-          className="select select-sm select-ghost text-lg lg:text-md xl:text-lg "
+          className="hidden sm:block select select-xs select-ghost sm:text-lg lg:text-md xl:text-lg mb-0 md:mb-3 lg:mb-0 mr-[-2rem] md:mr-0"
         >
           <option disabled>Temas</option>
           <option value="">Padrão</option>

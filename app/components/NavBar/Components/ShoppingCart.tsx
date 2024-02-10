@@ -13,7 +13,7 @@ export default function ShoppingCart() {
       <Link href="/cart" className="  mx-8 sm:mx-12 xl:mx-20 ">
         <ShoppingCartIcon className="text-base-content" fontSize="large" />
       </Link>
-      <span className="absolute top-[-8px] right-1/3 select-none rounded-full h-6 w-6 bg-primary text-base-100 flex items-center justify-center">
+      <span className={`absolute ${cartVolume > 99 && 'text-xs'} top-[-8px] right-1/3 select-none rounded-full h-6 w-6 bg-primary text-base-100 flex items-center justify-center`}>
         {cartVolume}
       </span>
     </div>

@@ -66,7 +66,7 @@ export default function ManageProducts({
   }, []);
 
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("sm"));
+  const matches = useMediaQuery(theme.breakpoints.up("md"));
 
   const [columnVisible, setColumnVisible] = useState(ALL_COLUMNS);
 
@@ -81,7 +81,7 @@ export default function ManageProducts({
   return (
     <div className="my-12 flex flex-col items-center overflow-auto">
       <AdminHeading title="Gerenciamento Dos Produtos" />
-      <div className=" w-11/12 mt-4 h-[100svh] max-w-[100%] ">
+      <div className="w-full md:w-11/12 mt-4 h-[100svh] max-w-[100%] ">
         <CustomDataGrid
           rows={getManageRows(products)}
           columns={getManageColumns({
