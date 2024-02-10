@@ -57,7 +57,9 @@ export default function CheckoutMenu() {
         setLoading(false);
       } catch (error) {
         if (!abortController.signal.aborted) {
-          router.refresh()
+          if (typeof window !== "undefined") {
+            window.location.reload();
+          }
           setLoading(false);
         }
       }
