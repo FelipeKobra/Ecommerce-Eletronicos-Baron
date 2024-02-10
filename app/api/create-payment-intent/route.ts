@@ -12,9 +12,7 @@ import noExistingOrder from "./functions/noExistingOrder";
 import updatePaymentIntentAndOrder from "./functions/updatePaymentIntentAndOrder";
 import updateProductDetails from "./functions/updateProductDetails";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2023-10-16",
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export async function POST(req: Request) {
   const currentUser = await getCurrentUser();
@@ -77,25 +75,29 @@ export async function POST(req: Request) {
     if (current_intent) {
       const existingOrder = await findExistingOrder(current_intent);
 
-      if (!existingOrder)
+      if (!existingOrder || existingOrder === null)
         return await noExistingOrder({ current_intent, orderData });
 
-      return updatePaymentIntentAndOrder({
-        payment_intent_id,
-        stripe,
-        items,
-        FloatTotal,
-        total,
-      });
+      try {
+        return await updatePaymentIntentAndOrder({
+          payment_intent_id: current_intent.id,
+          stripe,
+          items,
+          FloatTotal,
+          total,
+        });
+      } catch (error) {
+        return await createPaymentIntent({ stripe, orderData, total });
+      }
     }
   } else if (!payment_intent_id) {
     try {
       const existingOrder = await prisma.order.findFirst({
-        where: { userId: currentUser.id, status: PaymentStatus.Pendente },
+        where: { userId: currentUser.id, status: "Pendente" },
       });
       console.log(existingOrder);
 
-      if (existingOrder) {
+      if (existingOrder && existingOrder !== null) {
         const current_intent = await stripe.paymentIntents.retrieve(
           existingOrder.payment_intent_id
         );
@@ -112,10 +114,9 @@ export async function POST(req: Request) {
             total,
           });
         } catch (error) {
-          console.error(error);
           return await createPaymentIntent({ stripe, orderData, total });
         }
-      } else {
+      } else if (existingOrder === null) {
         return await createPaymentIntent({ stripe, orderData, total });
       }
     } catch (err) {

@@ -46,6 +46,8 @@ export default function CheckoutMenu() {
           }),
         });
 
+        console.log(response)
+
         if (response.status === 401) {
           return router.push("/login");
         }
@@ -57,10 +59,9 @@ export default function CheckoutMenu() {
         setLoading(false);
       } catch (error) {
         if (!abortController.signal.aborted) {
-          if (typeof window !== "undefined") {
-            window.location.reload();
-          }
+          console.log(error);
           setLoading(false);
+          setError(true)
         }
       }
     };
@@ -72,7 +73,9 @@ export default function CheckoutMenu() {
     return () => {
       abortController.abort();
     };
-  }, [cartItems, paymentIntent, router, setPaymentIntentLocalStorage]);
+  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const options: StripeElementsOptions = {
     clientSecret,
