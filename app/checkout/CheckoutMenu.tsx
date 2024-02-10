@@ -57,8 +57,7 @@ export default function CheckoutMenu() {
         setLoading(false);
       } catch (error) {
         if (!abortController.signal.aborted) {
-          setError(true);
-          console.log(error);
+          router.refresh()
           setLoading(false);
         }
       }
