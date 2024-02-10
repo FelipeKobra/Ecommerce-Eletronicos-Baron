@@ -58,9 +58,7 @@ export default function CheckoutForm({
       removeLocalStorage();
       localStorage.removeItem("Cart_Intent");
       window.scrollTo(0, 0);
-      if (typeof window !== "undefined") {
-        window.location.reload();
-      }
+      router.refresh();
       handlePaymentSucess(true);
     }
 
