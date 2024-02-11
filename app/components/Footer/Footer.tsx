@@ -13,7 +13,7 @@ import SupportLinks from "./SupportLinks";
 export default function Footer() {
   return (
     <footer>
-      <div className="grid grid-cols-8 justify-between text-sm text-neutral-content bg-neutral  pt-6 px-12">
+      <div className="grid grid-cols-8 justify-between text-sm text-neutral-content bg-neutral gap-10  pt-6 px-12">
         <FooterList>
           <h2 className="text-3xl md:text-xl font-semibold select-none">
             Categorias
