@@ -15,6 +15,7 @@ export type LocalStorageItem = {
 };
 
 export type LocalStorageContextType = {
+  setTema: (value: string) => void;
   tema: string;
   cartVolume: number;
   cartItems: LocalStorageItem[] | null;
@@ -29,6 +30,7 @@ export type LocalStorageContextType = {
 };
 
 export const LocalStorageContext = createContext<LocalStorageContextType>({
+  setTema: (value: string) => null,
   tema: "",
   cartVolume: 0,
   cartItems: null,
@@ -165,19 +167,24 @@ const LocalStorageProvider = ({ children }: { children: React.ReactNode }) => {
   const [tema, setTema] = useState("");
 
   useEffect(() => {
-    const updateTheme = () => {
+    function updateTheme() {
       const currentTheme = localStorage.getItem("theme");
       currentTheme && setTema(currentTheme);
-    };
+    }
 
     updateTheme();
 
     window.addEventListener("storage", updateTheme);
+
+    return () => {
+      window.removeEventListener("storage", updateTheme);
+    };
   }, []);
 
   return (
     <LocalStorageContext.Provider
       value={{
+        setTema,
         tema,
         cartVolume,
         cartItems,

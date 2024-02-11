@@ -55,7 +55,7 @@ export default function RegisterForm({
   return currentUser ? (
     <LoadingScreen />
   ) : (
-    <div className="w-11/12 md:w-9/12 lg:w-3/5 xl:w-1/2 h-[50rem] flex flex-col  shadow-lg justify-evenly items-center py-4 mb-14">
+    <div className="w-11/12 md:w-9/12 lg:w-3/5 xl:w-1/2 h-[50rem] flex flex-col gap-2 shadow-lg justify-evenly items-center py-4 mb-14">
       <h1 className="text-4xl">Registrar-se</h1>
       <GoogleSignupButton />
       <hr className="w-11/12" />

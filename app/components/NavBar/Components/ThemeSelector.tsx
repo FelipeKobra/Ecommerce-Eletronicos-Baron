@@ -1,17 +1,25 @@
 "use client";
 
-import { useEffect } from "react";
+import { LocalStorageContext } from "@/utils/providers/LocalStorageProvider";
+import { useContext, useEffect } from "react";
 import { themeChange } from "theme-change";
 
 function SwitchTheme() {
+  const { setTema } = useContext(LocalStorageContext);
+
   useEffect(() => {
     themeChange(false);
   }, []);
+
+  function changeTheme(e: any) {
+    setTema(e.target.value);
+  }
 
   return (
     <div className="flex text-base-content">
       <div>
         <select
+          onChange={changeTheme}
           data-choose-theme
           className="hidden sm:block select select-xs select-ghost sm:text-lg lg:text-md xl:text-lg mb-0 md:mb-3 lg:mb-0 mr-[-2rem] md:mr-0"
         >

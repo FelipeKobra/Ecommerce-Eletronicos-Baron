@@ -51,7 +51,7 @@ export default function LoginForm({
   return currentUser ? (
     <LoadingScreen />
   ) : (
-    <div className=" w-11/12 md:w-9/12 lg:w-3/5 xl:w-2/5 h-[45rem] flex flex-col gap-8 rounded-xl shadow-md justify-center items-center pb-4 mb-12">
+    <div className=" w-full md:w-9/12 lg:w-3/5 xl:w-2/5 h-[45rem] flex flex-col gap-8 rounded-xl shadow-md justify-center items-center  pb-4 mb-12">
       <h1 className="text-4xl">Login</h1>
       <GoogleSignupButton />
       <hr className="w-11/12" />
