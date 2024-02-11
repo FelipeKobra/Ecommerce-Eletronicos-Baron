@@ -21,7 +21,9 @@ export default async function NavBar() {
         </div>
 
         <div className=" hidden w-1/2 md:flex xl:w-1/3 justify-center items-center h-[3.5rem]">
+          <Suspense>
           <SearchInput />
+          </Suspense>
         </div>
 
         <div className="flex w-1/4 xl:w-1/3 my-auto flex-nowrap justify-end items-center sm:pr-4 md:pr-10">
