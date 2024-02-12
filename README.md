@@ -41,6 +41,7 @@ Preferi realizar o deploy na plataforma da Vercel, pois tem maior compatibilidad
 
 Nessa sessão deixarei tudo mais explícito de como as partes mais críticas do projeto foram feitas da forma mais detalhada possível!
 <hr>
+
 ## Database
 
 ### Observações
@@ -125,6 +126,7 @@ O schema além da conexão com o banco de dados e configuração do `Client` tam
 3. Na interação direta no banco de dados do postgreSQL, utilizando pgAdmin, por exemplo, o nome das tables tem que ser envolvido com aspas. Portanto no caso de selecionar todas as tabelas do `User` ficaria `SELECT * FROM "User"` durante o uso da Query
 
 <hr>
+
 ## Autenticação
 
 Para realizar a autenticação do projeto utilizei o NextAuth, já que ele possui como foco o Next.js e tem muitas features que possibilitam realizar autenticações mais flexíveis e fáceis de utilizar.
@@ -221,6 +223,7 @@ Essa é a forma de autenticação local, em que você define quais informações
 Agora é fácil pegar informações do usuário por meio do Hook `useSession`, realizar o login por meio do `SignIn` e outros hooks.
 
 <hr>
+
 ## Formulários de Autenticação
 
 ### Schema
@@ -314,6 +317,7 @@ Por padrão o zod já exibe mensagens de erro, mas você pode mudá-las como fiz
 8. Por fim, se quisermos utilzar nosso `Google Provider` é só adicionarmos um `signIn("google")` no botão que quisermos realizar a autenticação pelo Google, e para sair da conta, basta adicionar `signOut()` no botão que quisermos utilizar para esse fim. Recomendo utilizar o `onClick()` nesses casos.
 
 <hr>
+
 ## Página do Produto
 
 ### Estilização
@@ -377,6 +381,7 @@ Essa é uma parte mais complicada, pois depende de como a Database foi organizad
 9. Para adicionar as reviews é bem mais tranquilo, é necessário somente organizar cada variável de Review do `.map` em um componente, porém no meu caso preferi mostrar nada caso não tenha avaliações.
 
 <hr>
+
 ## Carrinho
 
 O sistema do carrinho, apesar de parecer simples, preferi organizar muito bem seu funcionamento e deixar várias funções que facilitasse seu uso, além de variáveis para todo o aplicativo.
@@ -439,6 +444,7 @@ O Provider é basicamente um conjunto de funções e variáveis que você pode u
 6. Outra atitude importante é que apesar de o uso do LocalStorage ser síncrono temos que esperar o site montar para conseguirmos utilizá-lo, então não temos como utilizar `useState(localStorage.getItem("Cart"))`, por exemplo, isso dá erro e, mesmo que funcione, torna a utilização dessa variável instável, então, para utiliza-la, temos que, primeiro declarar um state vazio ou com uma variável correspondente ao valor que será pego do *LocalStorage* e utilizar o `useEffect` para declarar essa variável, por isso que em meu Provider você verá muitos `useEffect`, que deixei separado para cada variável 
 
 <hr>
+
 ## Pagamento
 
 ### Stripe API
