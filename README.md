@@ -718,3 +718,87 @@ try {
           .send("Erro na atualização do status do pagamento:" + err);
       }
    ```
+<hr>
+
+## Controle de Acesso
+
+O controle de acesso, nesse caso, é somente a deixar pessoas autorizadas acessarem uma parte específica do seu site e que, normalmente, é onde se tem mais controle sobre o que ocorre no site e informações confidenciais sobre seu uso em geral.
+
+Isso não é diferente para nós, já que querermos ter uma noção de como as vendas estão indo, ter controle de estoque, ver os pedidos gerais, adicionar/remover produtos e por aí vai. Portanto temos que limitar esse acesso somente às pessoas em que confiamos para tal.
+
+### NextAuth
+
+Para realizarmos essa autenticação utilizaremos o NextAuth em conjunto com o [middleware.ts](https://nextjs.org/docs/app/building-your-application/routing/middleware).
+
+#### TypeScript
+
+O typescript, por padrão, considera que no `user` que retornamos do `authorize` tem somente àquelas informações padrão que o NextAuth deixa no token, como nome. Porém em nosso caso queremos pegar a função do usuário, ou seja, se ele é um administrador ou não, e para isso precisamos configurar nosso typescript para ele mostrar essas configurações por padrão e não gerar erros dizendo que tal propriedade não existe.
+
+1. Para isso devemos criar o arquivo `next-auth.d.ts` no nosso diretório raiz, ele permitirá alterarmos as informações e tipos que o typescript considera como correta.
+
+2. Após criar esse arquivo devemos criar dois módulos, o primeiro será o `"next-auth"` e nele diremos que a interface `User` tem todas as informações padrão que informamos antes, mais a sua função. E dizemos também que ele guardará esse `User` no lugar do usuário padrão na sessão, à qual pegamos as informações do user no useSession, por exemplo:
+```typescript
+declare module "next-auth" {
+  interface User extends DefaultUser {
+    role: "USER" | "ADMIN";
+  }
+
+  interface Session extends DefaultSession {
+    user: User;
+  }
+}
+```
+
+3. Depois é só declararmos que o nosso token JWT também terá essa *função* do usuário:
+```typescript
+declare module "next-auth/jwt" {
+  interface JWT extends DefaultJWT {
+    role: "USER" | "ADMIN";
+  }
+}
+```
+
+#### [...nextauth]
+
+Depois de editarmos o a tipagem, dizendo que há uma `role` em nosso JWT, precisamos realmente adicioná-la em nosso Token.
+
+1. Para isso temos que ir em nosso arquivo `[...nextauth]` que criamos anteriormente e verificar se retornamos todo o usuário no `authorize` ou pelo menos a `role` e outras informações de que precise
+
+2. Depois você precisa adicionar a `role` no `callback` do JWT, e para isso é só adicionar nas configurações após os providers. Essa configuração diz que a propriedade `token.role` será igual à `user.role`:
+```typescript
+  session: {
+    strategy: "jwt",
+  },
+  callbacks: {
+   jwt({ token, user }) {
+      token.role = user.role
+      return token;
+    },
+  },
+```
+
+3. Também especifiquei outras informações, como substituir o `secret` do NextAuth, mostrar as informações do NextAuth somente em modo de desenvolvimento e configurar uma página padrão para o NextAuth, apesar dessa última ser por precaução:
+```typescript
+  pages: { signIn: "/" },
+  debug: process.env.NODE_ENV === "development",
+  session: {
+    strategy: "jwt",
+  },
+  callbacks: {
+   jwt({ token, user }) {
+      token.role = user.role
+      return token;
+    },
+  },
+  secret: process.env.NEXTAUTH_SECRET
+```
+
+### Middleware
+
+Middleware, como o nome já diz, é algo que fica no *meio* das requisições que fazemos, e ele será de grande importância para nós. Preferi utilizar um Middleware para realizar o controle de acesso, pois é fácil de utilizar com NextAuth e com o Next.js em geral e principalmente porque, alguém com intenções maliciosas, não poderá nem acessar a rota da administração se ele não tiver o acesso para tal, evitando que por algum momento ele chegue à ter esse acesso indevido, mesmo que por muito pouco tempo.
+
+1. Essa etapa é mais um copia e cola, já que não temos muito o que alterar nesse caso. Eu peguei [esse exemplo](https://next-auth.js.org/configuration/nextjs#wrap-middleware) de middleware e removi a primeira parte.
+
+2. Além disso tem que especificar as rotas em que esse middleware estará ativo, então especifiquei: ``export const config = { matcher: ["/admin/:path*"] };``, isso significa qualquer rota do `/admin`, seja ele o próprio `/admin` e outras dentro dela como falaremos mais para frente
+
+3. Eu também adicionei verificações nas próprias páginas dessa rota para somente mostrar seu conteúdo se o usuário for autorizado, por precaução.
