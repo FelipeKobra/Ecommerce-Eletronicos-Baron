@@ -170,15 +170,14 @@ const LocalStorageProvider = ({ children }: { children: React.ReactNode }) => {
     function updateTheme() {
       const currentTheme = localStorage.getItem("theme");
       currentTheme && setTema(currentTheme);
+
+      if (!currentTheme) {
+        localStorage.setItem("theme", "light");
+        setTema("light");
+      }
     }
 
     updateTheme();
-
-    window.addEventListener("storage", updateTheme);
-
-    return () => {
-      window.removeEventListener("storage", updateTheme);
-    };
   }, []);
 
   return (
