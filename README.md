@@ -802,3 +802,155 @@ Middleware, como o nome já diz, é algo que fica no *meio* das requisições qu
 2. Além disso tem que especificar as rotas em que esse middleware estará ativo, então especifiquei: ``export const config = { matcher: ["/admin/:path*"] };``, isso significa qualquer rota do `/admin`, seja ele o próprio `/admin` e outras dentro dela como falaremos mais para frente
 
 3. Eu também adicionei verificações nas próprias páginas dessa rota para somente mostrar seu conteúdo se o usuário for autorizado, por precaução.
+
+<hr>
+
+## Admin Dashboard
+
+A parte da administração é de extrema relevância para donos de site, afinal, do que adianta ter um site de compras em que você não pode controlar seus produtos e funcionamento de forma mais simples.
+
+Temos 3 tipos de partes em nossa Admin Dashboard:
+ - Sessão de sumário, que é um resumo de vendas e informações no geral.
+ - Sessão de adicionar produtos
+ - Sessões de gerenciamente, como controle de produtos e pedidos
+
+### Sumário
+A sessão de sumário eu acho irrelevante falar nesse caso, já que você só pega as informações do banco de dados e soma os valores, ou os mostra no geral, nessa página. Porém já mostrei anteriormente na [Database](#database) como utilizar essas interações com o Prisma.
+
+Na questão do Gráfico é algo mais complicado que utiliza o [chart.js](https://www.chartjs.org), mas basicamente eu utilizei uma função para pegar os dados de vendas da última semana, e mostrar baseado no dia, sendo que ele sempre mostra de segunda à sexta, mostrando o dia da semana e do mês utilizando o BarGraph.
+
+No caso do meu gráfico ele pega o `chartData` e assimila cada valor para cada dia, onde customizei o gráfico com cores diferentes e disse que o gráfico é vertical e começa do 0:
+```jsx
+  const chartData = {
+    labels: labels,
+    datasets: [
+      {
+        label: "Ganho Diário",
+        data: amounts,
+        backgroundColor: "#4A00FFcc",
+        borderColor: "#D1DBFF",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    scales: { y: { beginAtZero: true } },
+  };
+
+  return <Bar className="my-10" data={chartData} options={options}></Bar>;
+```
+*Isso está no componente `/admin/components/BarGraph.tsx`*
+
+### Adicionar Produtos
+
+Para adicionar produtos considero um conhecimento muito importânte, pois aprendi a manejar as imagens e arrays pré-definidos para montar um formulário:
+
+#### Firebase
+
+O firebase tem uma função de armazenameto chamada `Storage` e, após criar sua conta no firebase você pode acessá-la, mas para usá-la precisamos configurar seu funcionamento
+
+1. Primeiro instale o firebase em sua aplicação: `npm install firebase`
+
+2. Depois você precisa ir nas configurações da sua aplicação e copiar o snippet padrão de configuração do Firebase, não vale a pena mostrar o exemplo padrão, pois você precisará acessar para ter todas as `Keys` que são necessárias para o uso da Firebase, porém, se quiser ter certeza, esse é o padrão:
+```typescript
+import { initializeApp } from "firebase/app";
+
+const firebaseConfig = {
+  apiKey: process.env.FIREBASE_APIKEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+
+export default firebaseApp;
+
+```
+3. Outra informação muito importante é que, se você adicionar variáveis de ambiente como eu fiz, diretamente nas configurações do Firebase, seu programa gerará um erro, isso ocorre porque como utilizamos a Firebase em `Client Components` normalmente, ele não terá acesso a essas variáveis, a menos que liberemos o acesso para o lado do cliente, porém não é inteligente liberar a chave diretamente para o `Client Side`, pois ele pode conseguir essas chaves analisando o tráfego de rede, por exemplo.
+
+4. Por isso, para utilizar essas variáveis, você deverá adicionar suas variáveis de ambiente como `Client Side` nas configurações no next.config. Porém você não mostrará as keys diretamente, você mostrará os `.env`, para, mesmo se o cliente conseguir acessar as chaves, elas continuarão sendo apenas `.env`:
+```
+  env: {
+    FIREBASE_APIKEY: process.env.FIREBASE_APIKEY,
+    FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
+    FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+    FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
+    FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+  },
+```
+
+#### useForm
+
+o useForm retorna, e dessa vez de forma mais importante. Mas o que você precisa saber ao analisar meu projeto é que você pode utilizar as variáveis do formulário como `"States"`. Isso é muito bom, pois, para inputs padrão, você consegue registrar os valores com `{...register}` e pegar esses valores em tempo real com `watch` e mudá-los também com `SetValue`.
+
+1. Isso tudo foi justamente o que utilizei para fazer `Controlled Components` com o useForm. Utilizo o `register` para alterar os valores e, se eles ultrapassarem o limite que estabeleci verificando com o `watch`, eu utilizo o `setValue` para alterar o valor para seu máximo permitido.
+
+2. No caso das categorias eu usei somente o `watch` e o `setValue`, sendo que o watch era para verificar se a categoria escolhida é a mesma que eu cliquei. caso seja eu deixo o `State` `isSelected` como `true` e ela fica com a borda diferenciada, para mostra que aquela categoria foi selecionada
+
+3. Agora, para modificar as cores, tive que pensar e estudar muito mais como ia fazer isso de forma inteligente e respeitando o uso do UseForm. Para isso eu utilizei o `useFieldArray` e criei um JSON com as variáveis padrão que aceito, e adicionei elas como valores padrão do `useForm`
+
+4. Depois disso foi só adicionar esse campo de array que adicionei no `zod` no meu `useFieldArray`:
+``const { fields } = useFieldArray({ control, name: "variables" });``
+
+5. Após adicionar o campo `variables` do meu `zod` no `useFieldArray` e chamá-la de `fields`, foi só iterar cada objeto do array para criar um componente:
+```jsx
+          {fields.map((field, index) => (
+            <div key={index}>
+              <ColorPicker
+                maxPrice={maxPrice}
+                maxStock={maxStock}
+                errors={errors}
+                register={register}
+                reset={reset}
+                index={index}
+                watch={watch}
+                setValue={setValue}
+                variable={field}
+                individualPrice={individualPrice}
+                individualStock={individualStock}
+                isProductCreated={isCreated}
+              />
+            </div>
+          ))}
+```
+
+6. Lembrando que eu meu `schema` do zod criei um parâmetro que era um `z.array()` e com um `z.object()` dentro dele com todas as especificações necessárias, sendo que muitas não estavam por padrão nas minhas variáveis do JSON, mas utilizei como forma de controle, como o `isChosen` para saber se aquela variável foi selecionada:
+```typescript
+export const variableSchema = z.object({
+  color: z.string(),
+  colorCode: z.string(),
+  stock: z.coerce.number().min(0).max(1000),
+  price: z.coerce.number().min(0).max(1000000),
+  image: z.instanceof(File).nullable().default(null),
+  imageURL: z.string().default(""),
+  imagePath: z.string().default(""),
+  isChosen: z.boolean().default(false),
+});
+export type variableItemForm = z.infer<typeof variableSchema>;
+
+export const schema = z.object({
+  productId: z.string().nullable().default(null),
+  name: z.string().min(5).max(200),
+  description: z.string().min(50).max(2000),
+  brand: z.string().min(1).max(100),
+  category: z.string().min(1).max(100),
+  variables: z
+    .array(variableSchema)
+    .refine((data) => data.some((variable) => variable.isChosen), {
+      message: "Escolha no mínimo uma cor para o produto!",
+    }),
+  globalPrice: z.coerce.number().min(0).max(1000000),
+  globalStock: z.coerce.number().min(0).max(1000),
+  removeBg: z.boolean().default(false),
+});
+```
+
+#### onSubmit
+
