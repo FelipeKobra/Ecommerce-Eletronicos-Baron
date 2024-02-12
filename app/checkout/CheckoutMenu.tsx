@@ -26,7 +26,7 @@ export default function CheckoutMenu() {
     useContext(LocalStorageContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [clientSecret, setClientSecret] = useState("");
+  const [clientSecret, setClientSecret] = useState();
   const [paymentSucess, setPaymentSucess] = useState(false);
 
   useEffect(() => {
@@ -47,27 +47,27 @@ export default function CheckoutMenu() {
           }),
         });
 
-       
         if (response.status === 401) {
           toast.error("Verifique se está logado e tente novamente");
+          localStorage.removeItem("Cart_Intent");
           return router.push("/login");
         }
 
         if (response.status === 400) {
-          const data = await response.json()
+          const data = await response.json();
           toast.error(data.error);
+          localStorage.removeItem("Cart_Intent");
           return router.push("/cart");
         }
 
         const data = await response.json();
         setClientSecret(data.paymentIntent.client_secret);
         setPaymentIntentLocalStorage(data.paymentIntent.id);
-        abortController.abort();
         setLoading(false);
       } catch (error: any) {
         if (!abortController.signal.aborted) {
-          console.log(error as string);
-          toast.error(error as string);
+          console.log(error);
+          toast.error(error);
           setLoading(false);
           setError(true);
         }
@@ -78,11 +78,10 @@ export default function CheckoutMenu() {
       fetchData();
     }
 
-    return () => {
-      abortController.abort();
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return () => abortController.abort();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cartItems, router, setPaymentIntentLocalStorage]);
 
   const options: StripeElementsOptions = {
     clientSecret,

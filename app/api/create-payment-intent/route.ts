@@ -33,11 +33,8 @@ export async function POST(req: Request) {
 
   try {
     await updateProductDetails(items);
-  } catch (error:any) {
-    return NextResponse.json(
-      { error: error.message },
-      { status: 400 }
-    );
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
   }
 
   const itemTotalPrice = items
@@ -75,28 +72,37 @@ export async function POST(req: Request) {
   };
 
   if (payment_intent_id) {
-    const current_intent =
-      await stripe.paymentIntents.retrieve(payment_intent_id);
+    try {
+      const current_intent =
+        await stripe.paymentIntents.retrieve(payment_intent_id);
 
-    if (!current_intent) return noCurrentIntent();
+      if (!current_intent) return noCurrentIntent();
 
-    if (current_intent) {
-      const existingOrder = await findExistingOrder(current_intent);
+      if (current_intent) {
+        const existingOrder = await findExistingOrder(current_intent);
 
-      if (!existingOrder || existingOrder === null)
-        return await noExistingOrder({ current_intent, orderData });
+        if (!existingOrder)
+          return await noExistingOrder({
+            current_intent,
+            orderData,
+            stripe,
+            total,
+          });
 
-      try {
-        return await updatePaymentIntentAndOrder({
-          payment_intent_id: current_intent.id,
-          stripe,
-          items,
-          FloatTotal,
-          total,
-        });
-      } catch (error) {
-        return await createPaymentIntent({ stripe, orderData, total });
+        try {
+          return await updatePaymentIntentAndOrder({
+            payment_intent_id: current_intent.id,
+            stripe,
+            items,
+            FloatTotal,
+            total,
+          });
+        } catch (error) {
+          return await createPaymentIntent({ stripe, orderData, total });
+        }
       }
+    } catch (error) {
+      return noCurrentIntent();
     }
   } else if (!payment_intent_id) {
     try {
@@ -104,23 +110,27 @@ export async function POST(req: Request) {
         where: { userId: currentUser.id, status: "Pendente" },
       });
 
-      if (existingOrder && existingOrder !== null) {
-        const current_intent = await stripe.paymentIntents.retrieve(
-          existingOrder.payment_intent_id
-        );
-
-        if (!current_intent) return noCurrentIntent();
-
+      if (existingOrder) {
         try {
-          return await updatePaymentIntentAndOrder({
-            payment_intent_id: current_intent.id,
-            FloatTotal,
-            items,
-            stripe,
-            total,
-          });
+          const current_intent = await stripe.paymentIntents.retrieve(
+            existingOrder.payment_intent_id
+          );
+
+          if (!current_intent) return noCurrentIntent();
+
+          try {
+            return await updatePaymentIntentAndOrder({
+              payment_intent_id: current_intent.id,
+              FloatTotal,
+              items,
+              stripe,
+              total,
+            });
+          } catch (error) {
+            return await createPaymentIntent({ stripe, orderData, total });
+          }
         } catch (error) {
-          return await createPaymentIntent({ stripe, orderData, total });
+          return noCurrentIntent();
         }
       } else if (existingOrder === null) {
         return await createPaymentIntent({ stripe, orderData, total });
