@@ -300,4 +300,127 @@ Por padrão o zod já exibe mensagens de erro, mas você pode mudá-las como fiz
 
 8. Por fim, se quisermos utilzar nosso `Google Provider` é só adicionarmos um `signIn("google")` no botão que quisermos realizar a autenticação pelo Google, e para sair da conta, basta adicionar `signOut()` no botão que quisermos utilizar para esse fim. Recomendo utilizar o `onClick()` nesses casos.
 
+## Página do Produto
+
+### Estilização
+
+1. Para ter a primeira noção de como estilizar sua página, primeiro você precisa ter uma noção do que será feito nela, portanto tem que pensar no meu caso tive que pensar no:
+- Título do Produto
+- Descrição
+- Preço
+- Troca de Cores
+- Reviews
+- Imagem
+
+e suas funcionalidades.
+
+2. Depois de ter essa noção é basicamente utilizar uma forma que você sabe que no final se tornará algo fácil ou minimamente razoável de ser responsivo e de forma organizada. No meu caso prefiro utilizar *Grid* e *Flexbox* na maior parte do projeto, pois tenho mais noção da funcionalidade e sei que, para tornar responsivo depois é muito mais prático do que utilizar *float*, por exemplo.
+
+3. Tudo isso que falei já tem que ser pensando na funcionalidade, pois se fizer algo muito complexo, o projeto fica confuso com o passar da produção, a menos que se tenha tudo organizado desde o começo.
+
+### Funcionalidade
+
+Essa é uma parte mais complicada, pois depende de como a Database foi organizada e como manejar essas informações.
+
+1. No começo recomendo utilizar um JSON como se fosse as informações do banco de dados recebidos, e ter sempre na cabeça que àquelas informações não serão permanentes, portanto, não deixar algo complicado para você do futuro ter dificuldade de entender, como foi meu caso.
+
+2. É bom saber como cada tipo de funcionalidade será praticada no futuro, quais partes serão [SSR](https://nextjs.org/docs/app/building-your-application/rendering/server-components) e quais serão [CSR](https://nextjs.org/docs/app/building-your-application/rendering/client-components), pois isso me deu muito trabalho para mudar futuramente.
+
+3. No caso do item anterior me referia principalmente à manipulação com a Database, já que você não consegue utilizar o prisma em um componente que é CSR, somente SSR ou por meio de uma `API Route`. Portanto tentava muitas vezes manipular os dados do banco de dados por meio do UseEffect em componentes CSR, o que [não é possível](https://github.com/prisma/prisma/issues/6219). Portanto se quiser manipular seu banco de dados em um CSR é necessário utilizar de `API Routes` em sua aplicação, ou manejar as informações em um componente pai que é SSR e passar para esse componente, o que não foi possível em meu caso, já que precisava de uma variável que usava `useContext`, que é um Hook, ou seja, só pode ser utilizado em CSR.
+
+4. Após todo esse pensamento e planejamento, está na hora da ação. na maior parte dessa sessão utilizo de useStates, que é um Hook que possibilita criar variáveis que conseguem mudar sem necessidade de a página precisar recarregar. Saber usar `useStates` é de extrema importância, já que em muitas partes do projeto eles são de grande ajuda e, na maioria das vezes, necessários. Uma atitude que aprendi a ter é sempre declarar o `State` no componente que está utilizando, ainda mais se ele for resultado de um `.map`, pois ele consegue mudar seu estado individualmente sem afetar os outros componentes, porém em meu projeto muitas vezes deixei um `useState` em um componente pai e alterava no filho, mas isso ocorreu quando precisava das informações dessa variável além daquele componente.
+
+*Dica: Utilize sempre keys em componentes frutos de `.map` que permanecem com os mesmos valores após o re-render, não utilize funções com números aleatórios como Math.random() ou v4() para gerar um UUID*
+
+5. No meu caso eu deixei cada imagem, preço, cor e estoque na variável do meu produto, com isso quero dizer, tenho um produto que é um celular, as informações como *nome, descrição, marca e categoria* eu deixei como `TABLES` do banco de dados do produto principal, pois são informações que não variam de uma cor para outra, por exemplo. Porém, para as variáveis, cada uma tinha um valor para àquelas características que comentei antes, como *preço, cor e imagem*, portanto torna muito mais fácil de manipular no uso geral, e isso não muda para a nossa página do produto.
+
+6. No nosso caso os produtos que mostro na página são todos baseados nessa organização. Então quando puxo do banco de dados puxo um produto e todas suas relações com as outras tabelas utilizando o [include](https://www.prisma.io/docs/orm/prisma-client/queries/relation-queries) no Prisma. Isso facilita muito, pois já tenho todas as informações do Produto principais, como Nome e descrição, e para disponibilizar as variáveis desse produto eu deixo como padrão a primeira variável `variavel[0]` e quando clico para mudar a cor ele apenas troca para a posição da variável clicada.
+
+7. Como é mudar uma variável em tempo real, a primeira informação que temos que lembrar é do `useState`, no qual crio uma variável que será o *index* da variável, ou seja, inicializo a variável como a primeira: `useState(0)`, e para cada botão de cor adiciono a função `onClick(mudarEstadoPara(index))`, o que fará com que tudo no site que utiliza a variável com aquele estado, mude para o estado referido. No meu caso eu adicionei o index durante o próprio uso do `.map`:
+
+   ```
+    {variaveis.map((variavel, index: number) => {
+        const nomeCor = variavel.color;
+        const codigoCor = variavel.colorCode;
+        return (
+          <div key={variavel.id} className="tooltip" data-tip={nomeCor}>
+            <button
+              onClick={() => setImageIndex(index)}
+              style={{ backgroundColor: `${codigoCor}` }}
+              className={` w-[2rem] h-[2rem] border-solid border-4 ${
+                index === imageIndex && "border-teal-400"
+              }  rounded-full hover:border-base-content duration-200  `}
+            />
+          </div>
+        );
+      })}
+   ```
+
+   Porém você pode fazer por meio de `id` ou `name` em um botão com o index da variável desejada, mas desse jeito acho mais fácil e prático de ser manipulada, pois utiliza do próprio `.map` para isso
+
+8. Para adicionar os produtos no Carrinho utilizei do LocalStorge, utilizava uma função criada por meio de um Provider que criei e falarei posteriormente, pego essa função do provider por meio do `useContext`, o qual ele adiciona informações básicas do produto no LocalStorage para saber à qual produto estou me referindo durante a compra, sua variável e quantidade. Se torna muito mais fácil de manejar essas informações se colocar todas as informações da variável e do produto no Local Storage, mas não faça isso, pois ocupa muito espaço desnecessário no Local Storage e são informações que podem ser alteradas facilmente por meio da aba `Application` no *Dev Tools* da maioria dos browsers. Portanto, apesar de, na hora do checkout, você poder verificar essas informações no backend para não deixar alguem alterar o preço, por exemplo, é sempre bom ter redundância e segurança no que se está fazendo.
+
+9. Para adicionar as reviews é bem mais tranquilo, é necessário somente organizar cada variável de Review do `.map` em um componente, porém no meu caso preferi mostrar nada caso não tenha avaliações.
+
+
+## Carrinho
+
+O sistema do carrinho, apesar de parecer simples, preferi organizar muito bem seu funcionamento e deixar várias funções que facilitasse seu uso, além de variáveis para todo o aplicativo.
+
+### Provider
+
+O Provider é basicamente um conjunto de funções e variáveis que você pode utilizar em toda a sua aplicação, após adiciona-lo em um [Context](https://react.dev/reference/react/useContext). 
+
+1. Para criar um Provider é só criar uma função com as funçoes e variáveis que desejar dentro dela.
+
+2. Depois você retorna esses valores da função por meio de um componente `wrap`, e adiciona as variáveis que deseja compartilhar na sua aplicação dentro do atributo `value`, lembrando que esse componente tem que possuir o nome do futuro context e com *.Provider* no final, ou seja, no caso abaixo o nome do context é LocalStorageContext e será utilizado para qualquer manipulação com o Local Storage faço para o carrinho e tema da aplicação:
+   ```
+     return (
+    <LocalStorageContext.Provider
+      value={{
+        setTema,
+        tema,
+        cartVolume,
+        cartItems,
+      }}
+    >
+      {children}
+    </LocalStorageContext.Provider>
+   );
+   ```
+
+3. Depois de criar o Provider é só utilizar o `CreateContext` para criar seu Context, lembrando que tem que possuir o mesmo nome que você deu para o componente no provider, e com os valores adicionados como `value` também:
+   ```
+   export const LocalStorageContext = createContext<LocalStorageContextType>({
+   setTema: (value: string) => null,
+   tema: "",
+   cartVolume: 0,
+   cartItems: null,
+   });
+   ```
+  *Lembrando que tem que exportar tanto o Provider quando o Context. O Provider para utilizar como componente e o Context para utilizar como valor no useContext*
+
+4. Após isso só temos que envolver nossa página no layout com esse Provider, e sempre que necessitarmos dessa variável é só utilizarmos `const {tema} = useContext(LocalStorageContext)`:
+   ``` Layout.tsx
+       <html lang="pt-br" className={poppins.className}>
+      <body className="flex flex-col min-h-screen">
+        <Toaster
+          toastOptions={{
+            style: { background: "rgb(51 65 85)", color: "#fff" },
+          }}
+        />
+        <LocalStorageProvider>
+          <Container>
+            <NavBar />
+            <main className="flex-grow flex flex-col ">{children}</main>
+            <Footer />
+          </Container>
+        </LocalStorageProvider>
+      </body>
+    </html>
+   ```
+
+5. É muito importante ressaltar que essas variáveis não permanecem com seus valores para todos os componentes, apenas para o componente que pegou a variável pelo `useContext` e seus componentes filhos, ou seja, se você alterou o valor do tema em uma página ele não mudara seu `State`. Por isso utilizamos o LocalStorage para guardar essas variáveis, para termos persistência de valores por toda a aplicação.
+
+6. Outra atitude importante é que apesar de o uso do LocalStorage ser síncrono temos que esperar o site montar para conseguirmos utilizá-lo, então não temos como utilizar `useState(localStorage.getItem("Cart"))`, por exemplo, isso dá erro e, mesmo que funcione, torna a utilização dessa variável instável, então, para utiliza-la, temos que, primeiro declarar um state vazio ou com uma variável correspondente ao valor que será pego do *LocalStorage* e utilizar o `useEffect` para declarar essa variável, por isso que em meu Provider você verá muitos `useEffect`, que deixei separado para cada variável 
   
