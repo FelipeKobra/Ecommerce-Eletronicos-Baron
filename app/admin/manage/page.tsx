@@ -6,8 +6,9 @@ import ManageProducts from "./ManageProducts";
 
 export default async function page() {
   const products = await getProducts({ category: null });
+  const user =await getCurrentUser()
 
-  return (
+ if(user) return (
     <div className="w-full h-full overflow-hidden">
       <ManageProducts products={products} />
     </div>

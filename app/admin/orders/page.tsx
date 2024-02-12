@@ -10,7 +10,7 @@ export default async function page() {
   const orders = await getOrders();
   const user = await getCurrentUser();
 
-  return (
+ if(user) return (
     <div className="w-full h-full">
       <ManageOrders orders={orders} />
     </div>
