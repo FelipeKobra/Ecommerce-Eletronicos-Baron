@@ -11,11 +11,27 @@ Vou tentar deixar tudo o mais didático possível sobre tudo o que considero rel
   - [Deploy](#deploy)
 - [Desenvolvimento](#desenvolvimento)
   - [Database](#database)
+    - [Observações](#observações-1)
+    - [ORM](#orm)
+    - [Configuração](#configuração)
+    - [Conexão Com Banco de Dados](#conexão-com-banco-de-dados)
+    - [Schema](#schema)
   - [Autenticação](#autenticação)
+    - [Instalação](#instalação-2)
+    - [Configuração](#configuração-1)
   - [Formulários de Autenticação](#formulários-de-autenticação)
+    - [Schema](#schema-1)
+    - [useForm](#useform)
+    - [onSubmit](#onsubmit)
   - [Página do Produto](#página-do-produto)
+    - [Estilização](#estilização)
+    - [Funcionalidade](#funcionalidade)
   - [Carrinho](#carrinho)
+    - [Provider](#provider)
   - [Pagamento](#pagamento)
+    - [Stripe API](#stripe-api)
+    - [Stripe Elements](#stripe-elements)
+    - [Stripe Webhook](#stripe-webhook)
 
 ## Instalação
 
@@ -248,9 +264,10 @@ const signInSchema = z.object({
 });
 ```
 
-2. Depois temos que instalar o `Resolver` do zod, o qual podemos utilizar depois com o `UseForm` para melhor gerenciamento das informações do Form por meio [desse pacote](https://www.npmjs.com/package/@hookform/resolvers/v/1.3.7)
+### useForm
+1. Depois temos que instalar o `Resolver` do zod, o qual podemos utilizar depois com o `UseForm` para melhor gerenciamento das informações do Form por meio [desse pacote](https://www.npmjs.com/package/@hookform/resolvers/v/1.3.7)
 
-3. Após isso temos que utilizar o useForm, utilizando o zodResolver, com nosso `schema` criado previamente:
+2. Após isso temos que utilizar o useForm, utilizando o zodResolver, com nosso `schema` criado previamente:
    ```typescript
     const {
     register,
@@ -263,7 +280,7 @@ const signInSchema = z.object({
    ```
    *Depois explicarei para que serve cada item desses além do zodResolver, porém o "onBlur" só significa que ele mostrará os erros de formulários após tirarmos o foco de um input, ou seja, clicar fora, por exemplo.*
 
- 4. Depois de deixar tudo configurado agora temos que, em cada campo adicionar seu respectivo register, que mostra à qual item do nosso `schema` que se refere aquele campo, então no caso abaixo, quando esse formulário for enviado, as informações que está nesse `input` serão consideradas as informações do email:
+ 3. Depois de deixar tudo configurado agora temos que, em cada campo adicionar seu respectivo register, que mostra à qual item do nosso `schema` que se refere aquele campo, então no caso abaixo, quando esse formulário for enviado, as informações que está nesse `input` serão consideradas as informações do email:
     ```jsx
         <form>
           <input
@@ -275,19 +292,22 @@ const signInSchema = z.object({
     <form>
     ```
 
-5. Ao declarar nosso `formState` no `useForm` também definimos como serão chamados os erros de nosso formulário, portanto é muito comum ver declarações como essa:
-```jsx
- {errors.email && (
-        <p className="text-error select-none text-xl font-semibold">
-          {errors.email.message}
-        </p>
-      )}
-```
-Que basicamente verificam se há algum erro, e, caso haja, ele exibe um parágrafo com a mensagem do erro.
+ 4. Ao declarar nosso `formState` no `useForm` também definimos como serão chamados os erros de nosso formulário, portanto é muito comum ver declarações como essa:
+ ```jsx
+  {errors.email && (
+         <p className="text-error select-none text-xl font-semibold">
+           {errors.email.message}
+         </p>
+       )}
+ ```
+ Que basicamente verificam se há algum erro, e, caso haja, ele exibe um parágrafo com a mensagem do erro.
 
-Por padrão o zod já exibe mensagens de erro, mas você pode mudá-las como fiz no esquema mostrado anteriormente `.min(8, "Senha deve ter no mínimo 8 caracteres")` e/ou utilizar um [pacote](https://github.com/aiji42/zod-i18n) de tradução de mensagens do zod que utilizo algumas vezes em meu projeto
+ Por padrão o zod já exibe mensagens de erro, mas você pode mudá-las como fiz no esquema mostrado anteriormente `.min(8, "Senha deve ter no mínimo 8 caracteres")` e/ou utilizar um [pacote](https://github.com/aiji42/zod-i18n) de tradução de mensagens do zod que 
+ utilizo algumas vezes em meu projeto
 
-6. Depois dessas configurações do formulário temos que definir para onde essas informações pegas irão por meio do `handleSubmit` que também foi importado junto com o useForm, seu uso é bem simples, você adiciona ele em seu `<form>` e especifica para qual função os valores irão, no caso abaixo ele irá para a função chamada `onSubmit`:
+### onSubmit
+
+1. Depois dessas configurações do formulário temos que definir para onde essas informações pegas irão por meio do `handleSubmit` que também foi importado junto com o useForm, seu uso é bem simples, você adiciona ele em seu `<form>` e especifica para qual função os valores irão, no caso abaixo ele irá para a função chamada `onSubmit`:
 
    ```jsx
          <form
@@ -295,8 +315,8 @@ Por padrão o zod já exibe mensagens de erro, mas você pode mudá-las como fiz
         onSubmit={handleSubmit(onSubmit)}
       >
    ```
-   
-7. Agora é só utilizarmos o `signIn` providenciado pelo NextAuth e definirmos o que acontece se a pessoa for autorizada ou não, caso seja, eu redireciono para a página de login, caso não, eu utilizo o [toast](https://react-hot-toast.com) e mostro o erro devolvido pelo NextAuth que definimos no `authenticate` pelo `throw new Error()`:
+
+2. Agora é só utilizarmos o `signIn` providenciado pelo NextAuth e definirmos o que acontece se a pessoa for autorizada ou não, caso seja, eu redireciono para a página de login, caso não, eu utilizo o [toast](https://react-hot-toast.com) e mostro o erro devolvido pelo NextAuth que definimos no `authenticate` pelo `throw new Error()`:
 
    ```typescript
     const callBack = await signIn("credentials", {
@@ -314,7 +334,7 @@ Por padrão o zod já exibe mensagens de erro, mas você pode mudá-las como fiz
    ```
 *Lembrando que utilizamos o "credentials", pois é o nome que definimos para o Credentials Provider*
 
-8. Por fim, se quisermos utilzar nosso `Google Provider` é só adicionarmos um `signIn("google")` no botão que quisermos realizar a autenticação pelo Google, e para sair da conta, basta adicionar `signOut()` no botão que quisermos utilizar para esse fim. Recomendo utilizar o `onClick()` nesses casos.
+3. Por fim, se quisermos utilzar nosso `Google Provider` é só adicionarmos um `signIn("google")` no botão que quisermos realizar a autenticação pelo Google, e para sair da conta, basta adicionar `signOut()` no botão que quisermos utilizar para esse fim. Recomendo utilizar o `onClick()` nesses casos.
 
 <hr>
 
