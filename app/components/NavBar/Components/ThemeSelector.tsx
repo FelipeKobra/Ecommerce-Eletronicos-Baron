@@ -5,7 +5,7 @@ import { useContext, useEffect } from "react";
 import { themeChange } from "theme-change";
 
 function SwitchTheme() {
-  const { tema, setTema } = useContext(LocalStorageContext);
+  const { setTema } = useContext(LocalStorageContext);
 
   useEffect(() => {
     themeChange(false);
@@ -24,9 +24,8 @@ function SwitchTheme() {
           className="hidden sm:block select select-xs select-ghost sm:text-lg lg:text-md xl:text-lg mb-0 md:mb-3 lg:mb-0 mr-[-2rem] md:mr-0"
         >
           <option disabled>Temas</option>
-          <option selected={tema.length <= 2 || tema === "light"} value="light">
-            Claro
-          </option>
+          <option value="">Padrão</option>
+          <option value="light">Claro</option>
           <option value="dark">Escuro</option>
           <option value="sunset">Sunset</option>
           <option value="synthwave">Synth</option>

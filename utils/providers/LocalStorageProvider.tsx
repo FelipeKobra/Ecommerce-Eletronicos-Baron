@@ -53,8 +53,7 @@ const calculateVolume = (arr: LocalStorageItem[]): number => {
 // // // // // // // //Provider Section // // // // // // // // // //
 
 const LocalStorageProvider = ({ children }: { children: React.ReactNode }) => {
-  const router = useRouter()
-
+  const router = useRouter();
 
   // Load cart quantity from local storage on mount.
   const [cartVolume, setCartVolume] = useState(0);
@@ -178,7 +177,7 @@ const LocalStorageProvider = ({ children }: { children: React.ReactNode }) => {
       if (!currentTheme) {
         localStorage.setItem("theme", "light");
         setTema("light");
-        router.refresh()
+        document.querySelector("html")?.setAttribute("data-theme", "light");
       }
     }
 
