@@ -1,8 +1,41 @@
 # Introdução
 
-Bem vindo, sou Felipe, comecei a estudar programação faz 3 meses e esse é meu primeiro projeto "grande"
+Bem vindo, sou Felipe, comecei a estudar programação faz 3 meses. Sempre ouço as pessoas falando que é programando que se aprende a programar,e decidi ver se era verdade!
 
-Vou tentar deixar tudo o mais didático possível sobre tudo o que considero relevante para entender esse projeto se tiver alguma dificuldade em entender alguma parte. Também vou esclarecer as partes que tive mais problemas para fazer funcionar e dicas que considero útil!
+Realmente, de longe foi uma experiência muito grande que ganhei com esse projeto, já que ele possui muita interatividade por parte do usuário, cuidados de segurança e controle pela equipe de administração.
+
+Muitas vezes vejo gente que já tem conhecimento em programação sem saber como explicar como aprendeu, e, vendo depois dessa experiência, eu entendo o que eles querem dizer. Saber como utilizar as tecnologias necessárias e saber como implementá-las em um projeto é ainda mais desafiador, muitas vezes tem que pensar por um tempo, se planejar, para saber ao menos onde começar. Então boa parte do tempo passamos mais tempo pesquisando e pensando do que programando em si, e é algo que vai se desenvolvendo gradualmente.
+
+Justamente por muitas vezes não saber como funciona para utilizar uma tecnologia e por onde começar decidi fazer esse `README` mais longo, para explicar quais os momentos de maior dificuldade do projeto e como considero ser a forma mais correta de utilizar as ferramentas que temos disponível. Vou tentar deixar tudo o mais didático possível sobre o que considero relevante para entender nesse projeto, caso tenha alguma dificuldade em entender alguma parte.
+
+## Tecnologias e Aprendizados
+
+### Tecnologias
+- Next.js
+- React.js
+- Node.js
+- NextAuth
+- Prisma
+
+### FrontEnd
+- ✅ Responsividade em todo o site
+- ✅ Uso de tabelas interativas
+- ✅ Carrossel responsivo
+- ✅ Mudança de Temas
+- ✅ Interativdade na escolha do produto
+- ✅ Troca de Foto de Perfil
+- ✅ Sistema de Login
+- ✅ Utilização e controle do LocalStorage
+- ✅ Sistema de controle de estoque
+
+### Backend
+- ✅ Rotas API
+- ✅ Interação com Firebase
+- ✅ Gerenciamento do Banco de Dados
+- ✅ Middlewares para controle de acesso
+- ✅ Credenciamento Local
+- ✅ Sistema de pagamento funcional
+- ✅ Criação de Enpoints para Webhooks
 
 ## Lista de Conteúdo
 - [Introdução](#introdução)
@@ -11,11 +44,36 @@ Vou tentar deixar tudo o mais didático possível sobre tudo o que considero rel
   - [Deploy](#deploy)
 - [Desenvolvimento](#desenvolvimento)
   - [Database](#database)
+    - [Observações](#observações-1)
+    - [ORM](#orm)
+    - [Configuração](#configuração)
+    - [Conexão Com Banco de Dados](#conexão-com-banco-de-dados)
+    - [Schema](#schema)
   - [Autenticação](#autenticação)
+    - [Instalação](#instalação-2)
+    - [Configuração](#configuração-1)
   - [Formulários de Autenticação](#formulários-de-autenticação)
+    - [Schema](#schema-1)
+    - [useForm](#useform)
+    - [onSubmit](#onsubmit)
   - [Página do Produto](#página-do-produto)
+    - [Estilização](#estilização)
+    - [Funcionalidade](#funcionalidade)
   - [Carrinho](#carrinho)
+    - [Provider](#provider)
   - [Pagamento](#pagamento)
+    - [Stripe API](#stripe-api)
+    - [Stripe Elements](#stripe-elements)
+    - [Stripe Webhook](#stripe-webhook)
+  - [Controle de Acesso](#controle-de-acesso)
+    - [NextAuth](#nextauth)
+    - [Middleware](#middleware)
+  - [Admin Dashboard](#admin-dashboard)
+    - [Sumário](#sumário)
+    - [Adicionar Produtos](#adicionar-produtos)
+    - [Gerenciamento por Tabela](#gerenciamento-por-tabela)
+- [Observações](#observações)
+- [Agradecimento](#agradecimento)
 
 ## Instalação
 
@@ -248,9 +306,10 @@ const signInSchema = z.object({
 });
 ```
 
-2. Depois temos que instalar o `Resolver` do zod, o qual podemos utilizar depois com o `UseForm` para melhor gerenciamento das informações do Form por meio [desse pacote](https://www.npmjs.com/package/@hookform/resolvers/v/1.3.7)
+### useForm
+1. Depois temos que instalar o `Resolver` do zod, o qual podemos utilizar depois com o `UseForm` para melhor gerenciamento das informações do Form por meio [desse pacote](https://www.npmjs.com/package/@hookform/resolvers/v/1.3.7)
 
-3. Após isso temos que utilizar o useForm, utilizando o zodResolver, com nosso `schema` criado previamente:
+2. Após isso temos que utilizar o useForm, utilizando o zodResolver, com nosso `schema` criado previamente:
    ```typescript
     const {
     register,
@@ -263,7 +322,7 @@ const signInSchema = z.object({
    ```
    *Depois explicarei para que serve cada item desses além do zodResolver, porém o "onBlur" só significa que ele mostrará os erros de formulários após tirarmos o foco de um input, ou seja, clicar fora, por exemplo.*
 
- 4. Depois de deixar tudo configurado agora temos que, em cada campo adicionar seu respectivo register, que mostra à qual item do nosso `schema` que se refere aquele campo, então no caso abaixo, quando esse formulário for enviado, as informações que está nesse `input` serão consideradas as informações do email:
+ 3. Depois de deixar tudo configurado agora temos que, em cada campo adicionar seu respectivo register, que mostra à qual item do nosso `schema` que se refere aquele campo, então no caso abaixo, quando esse formulário for enviado, as informações que está nesse `input` serão consideradas as informações do email:
     ```jsx
         <form>
           <input
@@ -275,19 +334,22 @@ const signInSchema = z.object({
     <form>
     ```
 
-5. Ao declarar nosso `formState` no `useForm` também definimos como serão chamados os erros de nosso formulário, portanto é muito comum ver declarações como essa:
-```jsx
- {errors.email && (
-        <p className="text-error select-none text-xl font-semibold">
-          {errors.email.message}
-        </p>
-      )}
-```
-Que basicamente verificam se há algum erro, e, caso haja, ele exibe um parágrafo com a mensagem do erro.
+ 4. Ao declarar nosso `formState` no `useForm` também definimos como serão chamados os erros de nosso formulário, portanto é muito comum ver declarações como essa:
+ ```jsx
+  {errors.email && (
+         <p className="text-error select-none text-xl font-semibold">
+           {errors.email.message}
+         </p>
+       )}
+ ```
+ Que basicamente verificam se há algum erro, e, caso haja, ele exibe um parágrafo com a mensagem do erro.
 
-Por padrão o zod já exibe mensagens de erro, mas você pode mudá-las como fiz no esquema mostrado anteriormente `.min(8, "Senha deve ter no mínimo 8 caracteres")` e/ou utilizar um [pacote](https://github.com/aiji42/zod-i18n) de tradução de mensagens do zod que utilizo algumas vezes em meu projeto
+ Por padrão o zod já exibe mensagens de erro, mas você pode mudá-las como fiz no esquema mostrado anteriormente `.min(8, "Senha deve ter no mínimo 8 caracteres")` e/ou utilizar um [pacote](https://github.com/aiji42/zod-i18n) de tradução de mensagens do zod que 
+ utilizo algumas vezes em meu projeto
 
-6. Depois dessas configurações do formulário temos que definir para onde essas informações pegas irão por meio do `handleSubmit` que também foi importado junto com o useForm, seu uso é bem simples, você adiciona ele em seu `<form>` e especifica para qual função os valores irão, no caso abaixo ele irá para a função chamada `onSubmit`:
+### onSubmit
+
+1. Depois dessas configurações do formulário temos que definir para onde essas informações pegas irão por meio do `handleSubmit` que também foi importado junto com o useForm, seu uso é bem simples, você adiciona ele em seu `<form>` e especifica para qual função os valores irão, no caso abaixo ele irá para a função chamada `onSubmit`:
 
    ```jsx
          <form
@@ -295,8 +357,8 @@ Por padrão o zod já exibe mensagens de erro, mas você pode mudá-las como fiz
         onSubmit={handleSubmit(onSubmit)}
       >
    ```
-   
-7. Agora é só utilizarmos o `signIn` providenciado pelo NextAuth e definirmos o que acontece se a pessoa for autorizada ou não, caso seja, eu redireciono para a página de login, caso não, eu utilizo o [toast](https://react-hot-toast.com) e mostro o erro devolvido pelo NextAuth que definimos no `authenticate` pelo `throw new Error()`:
+
+2. Agora é só utilizarmos o `signIn` providenciado pelo NextAuth e definirmos o que acontece se a pessoa for autorizada ou não, caso seja, eu redireciono para a página de login, caso não, eu utilizo o [toast](https://react-hot-toast.com) e mostro o erro devolvido pelo NextAuth que definimos no `authenticate` pelo `throw new Error()`:
 
    ```typescript
     const callBack = await signIn("credentials", {
@@ -314,7 +376,7 @@ Por padrão o zod já exibe mensagens de erro, mas você pode mudá-las como fiz
    ```
 *Lembrando que utilizamos o "credentials", pois é o nome que definimos para o Credentials Provider*
 
-8. Por fim, se quisermos utilzar nosso `Google Provider` é só adicionarmos um `signIn("google")` no botão que quisermos realizar a autenticação pelo Google, e para sair da conta, basta adicionar `signOut()` no botão que quisermos utilizar para esse fim. Recomendo utilizar o `onClick()` nesses casos.
+3. Por fim, se quisermos utilzar nosso `Google Provider` é só adicionarmos um `signIn("google")` no botão que quisermos realizar a autenticação pelo Google, e para sair da conta, basta adicionar `signOut()` no botão que quisermos utilizar para esse fim. Recomendo utilizar o `onClick()` nesses casos.
 
 <hr>
 
@@ -698,3 +760,343 @@ try {
           .send("Erro na atualização do status do pagamento:" + err);
       }
    ```
+<hr>
+
+## Controle de Acesso
+
+O controle de acesso, nesse caso, é somente a deixar pessoas autorizadas acessarem uma parte específica do seu site e que, normalmente, é onde se tem mais controle sobre o que ocorre no site e informações confidenciais sobre seu uso em geral.
+
+Isso não é diferente para nós, já que querermos ter uma noção de como as vendas estão indo, ter controle de estoque, ver os pedidos gerais, adicionar/remover produtos e por aí vai. Portanto temos que limitar esse acesso somente às pessoas em que confiamos para tal.
+
+### NextAuth
+
+Para realizarmos essa autenticação utilizaremos o NextAuth em conjunto com o [middleware.ts](https://nextjs.org/docs/app/building-your-application/routing/middleware).
+
+#### TypeScript
+
+O typescript, por padrão, considera que no `user` que retornamos do `authorize` tem somente àquelas informações padrão que o NextAuth deixa no token, como nome. Porém em nosso caso queremos pegar a função do usuário, ou seja, se ele é um administrador ou não, e para isso precisamos configurar nosso typescript para ele mostrar essas configurações por padrão e não gerar erros dizendo que tal propriedade não existe.
+
+1. Para isso devemos criar o arquivo `next-auth.d.ts` no nosso diretório raiz, ele permitirá alterarmos as informações e tipos que o typescript considera como correta.
+
+2. Após criar esse arquivo devemos criar dois módulos, o primeiro será o `"next-auth"` e nele diremos que a interface `User` tem todas as informações padrão que informamos antes, mais a sua função. E dizemos também que ele guardará esse `User` no lugar do usuário padrão na sessão, à qual pegamos as informações do user no useSession, por exemplo:
+```typescript
+declare module "next-auth" {
+  interface User extends DefaultUser {
+    role: "USER" | "ADMIN";
+  }
+
+  interface Session extends DefaultSession {
+    user: User;
+  }
+}
+```
+
+3. Depois é só declararmos que o nosso token JWT também terá essa *função* do usuário:
+```typescript
+declare module "next-auth/jwt" {
+  interface JWT extends DefaultJWT {
+    role: "USER" | "ADMIN";
+  }
+}
+```
+
+#### [...nextauth]
+
+Depois de editarmos o a tipagem, dizendo que há uma `role` em nosso JWT, precisamos realmente adicioná-la em nosso Token.
+
+1. Para isso temos que ir em nosso arquivo `[...nextauth]` que criamos anteriormente e verificar se retornamos todo o usuário no `authorize` ou pelo menos a `role` e outras informações de que precise
+
+2. Depois você precisa adicionar a `role` no `callback` do JWT, e para isso é só adicionar nas configurações após os providers. Essa configuração diz que a propriedade `token.role` será igual à `user.role`:
+```typescript
+  session: {
+    strategy: "jwt",
+  },
+  callbacks: {
+   jwt({ token, user }) {
+      token.role = user.role
+      return token;
+    },
+  },
+```
+
+3. Também especifiquei outras informações, como substituir o `secret` do NextAuth, mostrar as informações do NextAuth somente em modo de desenvolvimento e configurar uma página padrão para o NextAuth, apesar dessa última ser por precaução:
+```typescript
+  pages: { signIn: "/" },
+  debug: process.env.NODE_ENV === "development",
+  session: {
+    strategy: "jwt",
+  },
+  callbacks: {
+   jwt({ token, user }) {
+      token.role = user.role
+      return token;
+    },
+  },
+  secret: process.env.NEXTAUTH_SECRET
+```
+
+### Middleware
+
+Middleware, como o nome já diz, é algo que fica no *meio* das requisições que fazemos, e ele será de grande importância para nós. Preferi utilizar um Middleware para realizar o controle de acesso, pois é fácil de utilizar com NextAuth e com o Next.js em geral e principalmente porque, alguém com intenções maliciosas, não poderá nem acessar a rota da administração se ele não tiver o acesso para tal, evitando que por algum momento ele chegue à ter esse acesso indevido, mesmo que por muito pouco tempo.
+
+1. Essa etapa é mais um copia e cola, já que não temos muito o que alterar nesse caso. Eu peguei [esse exemplo](https://next-auth.js.org/configuration/nextjs#wrap-middleware) de middleware e removi a primeira parte.
+
+2. Além disso tem que especificar as rotas em que esse middleware estará ativo, então especifiquei: ``export const config = { matcher: ["/admin/:path*"] };``, isso significa qualquer rota do `/admin`, seja ele o próprio `/admin` e outras dentro dela como falaremos mais para frente
+
+3. Eu também adicionei verificações nas próprias páginas dessa rota para somente mostrar seu conteúdo se o usuário for autorizado, por precaução.
+
+<hr>
+
+## Admin Dashboard
+
+A parte da administração é de extrema relevância para donos de site, afinal, do que adianta ter um site de compras em que você não pode controlar seus produtos e funcionamento de forma mais simples.
+
+Temos 3 tipos de partes em nossa Admin Dashboard:
+ - Sessão de sumário, que é um resumo de vendas e informações no geral.
+ - Sessão de adicionar produtos
+ - Sessões de gerenciamente, como controle de produtos e pedidos
+
+### Sumário
+A sessão de sumário eu acho irrelevante falar nesse caso, já que você só pega as informações do banco de dados e soma os valores, ou os mostra no geral, nessa página. Porém já mostrei anteriormente na [Database](#database) como utilizar essas interações com o Prisma.
+
+Na questão do Gráfico é algo mais complicado que utiliza o [chart.js](https://www.chartjs.org), mas basicamente eu utilizei uma função para pegar os dados de vendas da última semana, e mostrar baseado no dia, sendo que ele sempre mostra de segunda à sexta, mostrando o dia da semana e do mês utilizando o BarGraph.
+
+No caso do meu gráfico ele pega o `chartData` e assimila cada valor para cada dia, onde customizei o gráfico com cores diferentes e disse que o gráfico é vertical e começa do 0:
+```jsx
+  const chartData = {
+    labels: labels,
+    datasets: [
+      {
+        label: "Ganho Diário",
+        data: amounts,
+        backgroundColor: "#4A00FFcc",
+        borderColor: "#D1DBFF",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    scales: { y: { beginAtZero: true } },
+  };
+
+  return <Bar className="my-10" data={chartData} options={options}></Bar>;
+```
+*Isso está no componente `/admin/components/BarGraph.tsx`*
+
+### Adicionar Produtos
+
+Para adicionar produtos considero um conhecimento muito importânte, pois aprendi a manejar as imagens e arrays pré-definidos para montar um formulário:
+
+#### Firebase
+
+O firebase tem uma função de armazenameto chamada `Storage` e, após criar sua conta no firebase você pode acessá-la, mas para usá-la precisamos configurar seu funcionamento
+
+1. Primeiro instale o firebase em sua aplicação: `npm install firebase`
+
+2. Depois você precisa ir nas configurações da sua aplicação e copiar o snippet padrão de configuração do Firebase, não vale a pena mostrar o exemplo padrão, pois você precisará acessar para ter todas as `Keys` que são necessárias para o uso da Firebase, porém, se quiser ter certeza, esse é o padrão:
+```typescript
+import { initializeApp } from "firebase/app";
+
+const firebaseConfig = {
+  apiKey: process.env.FIREBASE_APIKEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+
+export default firebaseApp;
+
+```
+3. Outra informação muito importante é que, se você adicionar variáveis de ambiente como eu fiz, diretamente nas configurações do Firebase, seu programa gerará um erro, isso ocorre porque como utilizamos a Firebase em `Client Components` normalmente, ele não terá acesso a essas variáveis, a menos que liberemos o acesso para o lado do cliente, porém não é inteligente liberar a chave diretamente para o `Client Side`, pois ele pode conseguir essas chaves analisando o tráfego de rede, por exemplo.
+
+4. Por isso, para utilizar essas variáveis, você deverá adicionar suas variáveis de ambiente como `Client Side` nas configurações no next.config. Porém você não mostrará as keys diretamente, você mostrará os `.env`, para, mesmo se o cliente conseguir acessar as chaves, elas continuarão sendo apenas `.env`:
+```
+  env: {
+    FIREBASE_APIKEY: process.env.FIREBASE_APIKEY,
+    FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
+    FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+    FIREBASE_STORAGE_BUCKET: process.env.FIREBASE_STORAGE_BUCKET,
+    FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+  },
+```
+
+#### useForm
+
+O `useForm` retorna, e dessa vez de forma mais importante. Mas o que você precisa saber ao analisar meu projeto é que você pode utilizar as variáveis do formulário como `"States"`. Isso é muito bom, pois, para inputs padrão, você consegue registrar os valores com `{...register}` e pegar esses valores em tempo real com `watch` e mudá-los também com `SetValue`.
+
+1. Isso tudo foi justamente o que utilizei para fazer `Controlled Components` com o useForm. Utilizo o `register` para alterar os valores e, se eles ultrapassarem o limite que estabeleci verificando com o `watch`, eu utilizo o `setValue` para alterar o valor para seu máximo permitido.
+
+2. No caso das categorias eu usei somente o `watch` e o `setValue`, sendo que o watch era para verificar se a categoria escolhida é a mesma que eu cliquei. caso seja eu deixo o `State` `isSelected` como `true` e ela fica com a borda diferenciada, para mostra que aquela categoria foi selecionada
+
+3. Agora, para modificar as cores, tive que pensar e estudar muito mais como ia fazer isso de forma inteligente e respeitando o uso do UseForm. Para isso eu utilizei o `useFieldArray` e criei um JSON com as variáveis padrão que aceito, e adicionei elas como valores padrão do `useForm`
+
+4. Depois disso foi só adicionar esse campo de array que adicionei no `zod` no meu `useFieldArray`:
+``const { fields } = useFieldArray({ control, name: "variables" });``
+
+5. Após adicionar o campo `variables` do meu `zod` no `useFieldArray` e chamá-la de `fields`, foi só iterar cada objeto do array para criar um componente:
+```jsx
+          {fields.map((field, index) => (
+            <div key={index}>
+              <ColorPicker
+                maxPrice={maxPrice}
+                maxStock={maxStock}
+                errors={errors}
+                register={register}
+                reset={reset}
+                index={index}
+                watch={watch}
+                setValue={setValue}
+                variable={field}
+                individualPrice={individualPrice}
+                individualStock={individualStock}
+                isProductCreated={isCreated}
+              />
+            </div>
+          ))}
+```
+
+6. Lembrando que eu meu `schema` do zod criei um parâmetro que era um `z.array()` e com um `z.object()` dentro dele com todas as especificações necessárias, sendo que muitas não estavam por padrão nas minhas variáveis do JSON, mas utilizei como forma de controle, como o `isChosen` para saber se aquela variável foi selecionada:
+```typescript
+export const variableSchema = z.object({
+  color: z.string(),
+  colorCode: z.string(),
+  stock: z.coerce.number().min(0).max(1000),
+  price: z.coerce.number().min(0).max(1000000),
+  image: z.instanceof(File).nullable().default(null),
+  imageURL: z.string().default(""),
+  imagePath: z.string().default(""),
+  isChosen: z.boolean().default(false),
+});
+export type variableItemForm = z.infer<typeof variableSchema>;
+
+export const schema = z.object({
+  productId: z.string().nullable().default(null),
+  name: z.string().min(5).max(200),
+  description: z.string().min(50).max(2000),
+  brand: z.string().min(1).max(100),
+  category: z.string().min(1).max(100),
+  variables: z
+    .array(variableSchema)
+    .refine((data) => data.some((variable) => variable.isChosen), {
+      message: "Escolha no mínimo uma cor para o produto!",
+    }),
+  globalPrice: z.coerce.number().min(0).max(1000000),
+  globalStock: z.coerce.number().min(0).max(1000),
+  removeBg: z.boolean().default(false),
+});
+```
+
+#### onSubmit
+
+Depois de realizar o Form em si, temos que utilizar as informações que pegamos para criar o produto. No geral eu verifiquei se as informações que dependiam do `setValue` foram preenchidas, caso elas foram eu continuava o processo.
+
+1. O processo se resume em pegar as imagens recebidas do fornecidas pelo formulário, fazer upload de cada uma, de pois devolver o link correto da imagem para cada uma. Para isso é simples, você precisa decidir qual será o nome do arquivo, qual o local que ele ficará no Storage e fazer o upload pelo `uploadBytesResumable`, caso queira verificar em porcentagens o progresso do upload. Depois utilizar o `getDownloadURL` para pegar o URL de download da imagem que acabamos de fazer upload e adicionar como atributo do mesmo objeto o qual pegamos a imagem, isso é possível através da iteração desse conjunto de objetos. No processo abaixo queria verificar o processo de upload, mas no final achei melhor não e retirei as informações do `snapshot`, lembrando que o `storageRef` é somente o caminho da imagem com seu respectivo nome:
+```typescript
+for (const image of noBgImageFiles ? noBgImageFiles : imageFiles) {
+        if (image) {
+          const fileName = new Date().getTime() + "-" + v4();
+          const storage = getStorage(firebaseApp);
+          const storageRef = ref(storage, `produtos/${fileName}`);
+          const uploadTask = uploadBytesResumable(storageRef, image, {
+            customMetadata: { path: `produtos/${fileName}` },
+          });
+
+          await new Promise<void>((resolve, reject) => {
+            uploadTask.on(
+              "state_changed",
+              (snapshot) => {},
+              (error) => {
+                console.log("Ocorreu um erro no upload da imagem", error);
+                reject(error);
+              },
+              () => {
+                getDownloadURL(uploadTask.snapshot.ref)
+                  .then((downloadURL) => {
+                    data.variables[imageURLIndex].imageURL = downloadURL;
+                    data.variables[imageURLIndex].imagePath =
+                      `produtos/${fileName}`;
+                    imageURLIndex++;
+                    resolve();
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                    reject(error);
+                  });
+```
+
+2. No meu caso eu adicionei o [pacote](https://www.npmjs.com/package/@imgly/background-removal-node) de remover o plano de fundo da imagem, mas no final não achei que ficou muito compatível com o projeto, já que por padrão ele retira o mínimo possível do fundo, e mesmo assim já é muito intrusivo, causando buracos nas imagens, então preferi manter todas as imagens com fundo e adaptar essas imagens nos diferentes temas, sempre com o fundo branco.
+
+3. Depois de gerenciar as imagens e seus links é só você adicionar esse objeto na Database, porém como estamos em um `Client Component` temos que fazer a chamada da API para conseguir manipular.
+
+4. Recomendo sempre utilizar o Firebase, no caso do Storage, no `Client Side`, já que, para fazer a transferência das imagens para uma API precisaria utilizar o `FormData`, complicando seu uso desnecessariamente.
+
+### Gerenciamento por Tabela
+
+O gerenciamento por tabela é muito mais prático e organizado do que verificar essas informações na Database, e não é difícil de implantar quando temos uma biblioteca como o MUI-X, que possui um Datagrid próprio e funcional
+
+1. Antes de começar tenha em mente que, para utilizar o DataGrid à partir da V6, você precisa adicionar um `overflow-hidden` em todos os componentes pais e ancestrais do DataGrid em si para ele se tornar responsivo da forma correta, então, além disso ser desnecessariamente trabalhoso, também pode causar manutenções desnecessárias, já que, se você adicionar outro elemento dentro desse ancestral e esquecer de adicionar essa propriedade, toda a responsividade será perdida e será difícil lembrar depois o motivo. Por isso, em relação ao Datagrid, estou utilizando a última versão da V5, que não precisa de todo esse cuidado para implantar e não tem tantas perdas para usos não tão complexos como o nosso. Em [alguns casos](https://github.com/mui/mui-x/issues/8547#issuecomment-1699710711) adicionar a `Box` do MUI com ``<Box sx={{ width: "100%", display: "grid" }}>`` funciona, mas para mim não foi o caso. 
+
+2. Sabendo disso também tenho que comentar sobre outro problema. Como estamos numa versão desatualizada algumas situações entram em conflito, como a estilização do `emotion`, que é a padrão utilizada pelo MUI, então não conseguimos utilizar temas em ambientes de produção, provavelmente por um bug, então verifiquei as classes e dos objetos do Datagrid e estilizei pelo `globals.css`.Isso é ruim caso queiramos estilizar Datagrid's em nosso site de formas diferentes, porém, no momento não é o caso e, caso precise, a forma seria realizar o que falei no *item 1* adicionar o [Theme Provider](https://mui.com/material-ui/customization/theming/#theme-provider).
+
+3. Agora sim, para utilizarmos o Datagrid precisamos definir quais serão as linhas e as colunas, sendo que, as informações que definimos como linhas, ou `rows`, como preferir, serão as informações que aparecerão no Header do Datagrid e, as informações que adicionarmos como colunas serão como as células dessas linhas estarão dispostas e com quais funcionamentos.
+
+4. Na hora da criação das `rows` eu peguei um objeto vazio e coloquei as informações de todos os objetos dentro dela. Saiba que, dentro das `rows`, que é um array, é preferível adicionar objetos anônimos com propriedades dentro dela:
+```typescript
+  let rows: any = [];
+
+  for (const product of products) {
+    for (const variable of product.ProductVariable) {
+      rows.push({
+        id: `${product.id}-${variable.id}`,
+        product_id: product.id,
+        variable_id: variable.id,
+        name: product.name,
+        category: product.category,
+        brand: product.brand,
+        color: variable.color,
+        colorCode: variable.colorCode,
+        price: formatPrice(variable.price),
+        quantity: variable.stock,
+        image: variable.image,
+        imagePath: variable.imagePath,
+        selling: product.selling,
+      });
+    }
+  }
+
+  return rows
+```
+
+5. Agora para lidar com as colunas é mais complicado, ainda mais se quiser adicionar funcionalidades à mais. As colunas também se trata de um array com objetos dentro, porém você pode adicionar o parâmetro `renderCell` para adicionar um JSX dentro. Os `params` são as informações do Datagrid, então se quisermos pegar a informação de uma linha é só utilizarmos o `params.row.nomeDaVariável`. No caso abaixo eu mostro um desses parâmetros de um objeto que está dentro desse array, sabendo que nele também é bom definirmos uma largura e, algumas vezes, definir ele como `flex`, que é como é o tamanho dele de acordo com as outras células com a mesma propriedade, portanto se uma coluna tem `flex:1` e outra `flex:0.5`, a primeira terá o dobro do tamanho:
+```jsx
+{
+      field: "color",
+      headerName: "Cor",
+      minWidth: 130,
+      renderCell(params) {
+        return <ManageColor params={params} />;
+      },
+    },
+```
+*No caso acima temos o `field`, que é à qual linha ele se refere.`headerName` que é o nome que aparecerá no cabeçalho.`minWidth` que é a largura mínima em pixels e o `renderCell` que expliquei acima*
+
+<hr>
+
+# Observações
+- Preferi esconder a escolha de temas para celular, pois acho que não fica condizente com a perspectiva do site e desagradável de se ver, e adicionar a escolha do tema ao clicar no usuário ficaria estranho e desnecessário ao meu veu
+- Também preferi não habilitar a troca de imagens no celular, pois como a troca funciona por `modal`, em alguns celulares isso torna incompatível com seu uso, e adicionar diretamente a escolha de arquivo ao clicar pode gerar desgaste na UX, já que o usuário pode clicar sem querer na troca de imagens, fazendo abrir a galeria sem desejar. Como isso é um site de compras e não uma rede social, também considero desnecessário seu uso em todas as plataformas
+- O uso das DataGrid para celular utilizam a scrollbar horizontal ao invés de diminuir as colunas para celular, apesar de ter que arrastar para ver todos os itens da tabela, acho melhor do que ter que ficar utilizando zoom para ver as informações na tela
+- Algumas vezes da um glitch ao entrar no sistema de pagamento, em que aparece o formulário e some, depois aparece funcional de novo. Adicionei um commit para arrumar isso, mas caso apareça é só ignorar, ele só está carregando o intent, e muitas vezes é bug da própria plataforma
+
+<hr>
+
+# Agradecimento
+Boa parte do aprendizado foi possível por meio das documentações e vídeos de [chaoocharles](https://github.com/chaoocharles), que é um programador do 🇰🇪 Kenya especializado em React e Node.js.
