@@ -6,10 +6,9 @@ import { OrderByIdQueryResult } from "@/utils/interfaces/getPrismaItems/getOrder
 
 import OrderHeaders from "./components/OrderHeaders";
 import OrderOrders from "./components/OrderOrders";
-import {
-  default as OrderDeliveryStatus,
-  default as OrderPaymentStatus,
-} from "./components/OrderPaymentStatus";
+import OrderPaymentStatus from "./components/OrderPaymentStatus";
+import OrderDeliveryStatus from "./components/OrderDeliveryStatus";
+
 
 
 export default function OrderDetails({
@@ -23,7 +22,6 @@ export default function OrderDetails({
         <OrderHeaders order={order} />
         <OrderPaymentStatus order={order} />
         <OrderDeliveryStatus order={order} />
-        <OrderPaymentStatus order={order} />
         <OrderOrders order={order} />
       </div>
     );
