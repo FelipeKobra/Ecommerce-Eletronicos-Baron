@@ -9,7 +9,7 @@ import getProducts, {
 import Banner from "./components/Home/Banner/Banner";
 import ProductsArray from "./components/Home/Products/ProductsArray";
 import NoData from "./components/NoData";
-import SwiperCarousel from "./components/SwiperCarousel";
+import EmblaCarousel from "./components/EmblaCarousel";
 
 interface HomeProps {
   searchParams: getProductsProps;
@@ -79,7 +79,7 @@ export default async function page({ searchParams }: HomeProps) {
                 <p>LANÇAMENTOS</p>
               </div>
 
-              <SwiperCarousel produtos={lancamentos} />
+              <EmblaCarousel produtos={lancamentos} />
             </div>
 
             <div className="w-11/12 relative flex flex-col ">
@@ -88,7 +88,7 @@ export default async function page({ searchParams }: HomeProps) {
                 <p>MAIS VENDIDOS</p>
               </div>
 
-              <SwiperCarousel produtos={destaques} />
+              <EmblaCarousel produtos={destaques} />
             </div>
           </>
         )}

@@ -18,6 +18,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ produto }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isLoading,setIsLoading] = useState(true)
   const primeiraVariavel = produto.ProductVariable[0];
   const nomeTruncado = truncateNames(produto.name);
 
@@ -34,12 +35,14 @@ export default function ProductCard({ produto }: ProductCardProps) {
           }`}
         >
           <figure className="h-[14rem] relative m-2">
+            {isLoading && <span className="loading loading-spinner loading-md absolute left-0 top-0"></span>}
             <Image
-              className="rounded-lg w-auto hover:scale-110 duration-300 p-[6rem]  sm:p-12"
+              className="rounded-lg w-auto hover:scale-110 duration-300 p-[2rem]  sm:p-12"
               width={150}
               height={140}
               src={primeiraVariavel.image}
               alt={`Imagem do Produto:${nomeTruncado}`}
+              onLoad={(e) => setIsLoading(false)}
             />
           </figure>
           {checkNewProduct(produto) && (

@@ -9,7 +9,7 @@ import { ProductArrayType } from "@/utils/interfaces/getPrismaItems/getProducts"
 
 import ProductCard from "./Home/Products/ProductCard";
 
-export default function SwiperCarousel({
+export default function EmblaCarousel({
   produtos,
 }: {
   produtos: ProductArrayType | ProductHighlightArrayType;
@@ -17,7 +17,6 @@ export default function SwiperCarousel({
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadingArray = Array(5).fill(null);
 
   useEffect(() => {
     setIsLoading(false);

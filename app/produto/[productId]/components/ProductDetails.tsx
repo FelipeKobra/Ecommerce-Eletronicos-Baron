@@ -78,7 +78,7 @@ export default function ProductDetails({ produto }: { produto: ProductType }) {
   const router = useRouter();
 
  if(produto) return (
-    <div className="w-full grid grid-cols-2 my-8">
+    <div className=" w-full grid grid-cols-2 my-8">
       <ProductImage
         imagens={imagens}
         imageIndex={imageIndex}
