@@ -72,7 +72,7 @@ Justamente por muitas vezes não saber como funciona para utilizar uma tecnologi
     - [Sumário](#sumário)
     - [Adicionar Produtos](#adicionar-produtos)
     - [Gerenciamento por Tabela](#gerenciamento-por-tabela)
-- [Observações](#observações)
+- [Observações](#observações-3)
 - [Agradecimento](#agradecimento)
 
 ## Instalação
