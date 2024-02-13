@@ -888,7 +888,7 @@ export default firebaseApp;
 
 #### useForm
 
-o useForm retorna, e dessa vez de forma mais importante. Mas o que você precisa saber ao analisar meu projeto é que você pode utilizar as variáveis do formulário como `"States"`. Isso é muito bom, pois, para inputs padrão, você consegue registrar os valores com `{...register}` e pegar esses valores em tempo real com `watch` e mudá-los também com `SetValue`.
+O `useForm` retorna, e dessa vez de forma mais importante. Mas o que você precisa saber ao analisar meu projeto é que você pode utilizar as variáveis do formulário como `"States"`. Isso é muito bom, pois, para inputs padrão, você consegue registrar os valores com `{...register}` e pegar esses valores em tempo real com `watch` e mudá-los também com `SetValue`.
 
 1. Isso tudo foi justamente o que utilizei para fazer `Controlled Components` com o useForm. Utilizo o `register` para alterar os valores e, se eles ultrapassarem o limite que estabeleci verificando com o `watch`, eu utilizo o `setValue` para alterar o valor para seu máximo permitido.
 
@@ -953,4 +953,97 @@ export const schema = z.object({
 ```
 
 #### onSubmit
+
+Depois de realizar o Form em si, temos que utilizar as informações que pegamos para criar o produto. No geral eu verifiquei se as informações que dependiam do `setValue` foram preenchidas, caso elas foram eu continuava o processo.
+
+1. O processo se resume em pegar as imagens recebidas do fornecidas pelo formulário, fazer upload de cada uma, de pois devolver o link correto da imagem para cada uma. Para isso é simples, você precisa decidir qual será o nome do arquivo, qual o local que ele ficará no Storage e fazer o upload pelo `uploadBytesResumable`, caso queira verificar em porcentagens o progresso do upload. Depois utilizar o `getDownloadURL` para pegar o URL de download da imagem que acabamos de fazer upload e adicionar como atributo do mesmo objeto o qual pegamos a imagem, isso é possível através da iteração desse conjunto de objetos. No processo abaixo queria verificar o processo de upload, mas no final achei melhor não e retirei as informações do `snapshot`, lembrando que o `storageRef` é somente o caminho da imagem com seu respectivo nome:
+```typescript
+for (const image of noBgImageFiles ? noBgImageFiles : imageFiles) {
+        if (image) {
+          const fileName = new Date().getTime() + "-" + v4();
+          const storage = getStorage(firebaseApp);
+          const storageRef = ref(storage, `produtos/${fileName}`);
+          const uploadTask = uploadBytesResumable(storageRef, image, {
+            customMetadata: { path: `produtos/${fileName}` },
+          });
+
+          await new Promise<void>((resolve, reject) => {
+            uploadTask.on(
+              "state_changed",
+              (snapshot) => {},
+              (error) => {
+                console.log("Ocorreu um erro no upload da imagem", error);
+                reject(error);
+              },
+              () => {
+                getDownloadURL(uploadTask.snapshot.ref)
+                  .then((downloadURL) => {
+                    data.variables[imageURLIndex].imageURL = downloadURL;
+                    data.variables[imageURLIndex].imagePath =
+                      `produtos/${fileName}`;
+                    imageURLIndex++;
+                    resolve();
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                    reject(error);
+                  });
+```
+
+2. No meu caso eu adicionei o [pacote](https://www.npmjs.com/package/@imgly/background-removal-node) de remover o plano de fundo da imagem, mas no final não achei que ficou muito compatível com o projeto, já que por padrão ele retira o mínimo possível do fundo, e mesmo assim já é muito intrusivo, causando buracos nas imagens, então preferi manter todas as imagens com fundo e adaptar essas imagens nos diferentes temas, sempre com o fundo branco.
+
+3. Depois de gerenciar as imagens e seus links é só você adicionar esse objeto na Database, porém como estamos em um `Client Component` temos que fazer a chamada da API para conseguir manipular.
+
+4. Recomendo sempre utilizar o Firebase, no caso do Storage, no `Client Side`, já que, para fazer a transferência das imagens para uma API precisaria utilizar o `FormData`, complicando seu uso desnecessariamente.
+
+### Gerenciamento por Tabela
+
+O gerenciamento por tabela é muito mais prático e organizado do que verificar essas informações na Database, e não é difícil de implantar quando temos uma biblioteca como o MUI-X, que possui um Datagrid próprio e funcional
+
+1. Antes de começar tenha em mente que, para utilizar o DataGrid à partir da V6, você precisa adicionar um `overflow-hidden` em todos os componentes pais e ancestrais do DataGrid em si para ele se tornar responsivo da forma correta, então, além disso ser desnecessariamente trabalhoso, também pode causar manutenções desnecessárias, já que, se você adicionar outro elemento dentro desse ancestral e esquecer de adicionar essa propriedade, toda a responsividade será perdida e será difícil lembrar depois o motivo. Por isso, em relação ao Datagrid, estou utilizando a última versão da V5, que não precisa de todo esse cuidado para implantar e não tem tantas perdas para usos não tão complexos como o nosso. Em [alguns casos](https://github.com/mui/mui-x/issues/8547#issuecomment-1699710711) adicionar a `Box` do MUI com ``<Box sx={{ width: "100%", display: "grid" }}>`` funciona, mas para mim não foi o caso. 
+
+2. Sabendo disso também tenho que comentar sobre outro problema. Como estamos numa versão desatualizada algumas situações entram em conflito, como a estilização do `emotion`, que é a padrão utilizada pelo MUI, então não conseguimos utilizar temas em ambientes de produção, provavelmente por um bug, então verifiquei as classes e dos objetos do Datagrid e estilizei pelo `globals.css`.Isso é ruim caso queiramos estilizar Datagrid's em nosso site de formas diferentes, porém, no momento não é o caso e, caso precise, a forma seria realizar o que falei no *item 1* adicionar o [Theme Provider](https://mui.com/material-ui/customization/theming/#theme-provider).
+
+3. Agora sim, para utilizarmos o Datagrid precisamos definir quais serão as linhas e as colunas, sendo que, as informações que definimos como linhas, ou `rows`, como preferir, serão as informações que aparecerão no Header do Datagrid e, as informações que adicionarmos como colunas serão como as células dessas linhas estarão dispostas e com quais funcionamentos.
+
+4. Na hora da criação das `rows` eu peguei um objeto vazio e coloquei as informações de todos os objetos dentro dela. Saiba que, dentro das `rows`, que é um array, é preferível adicionar objetos anônimos com propriedades dentro dela:
+```typescript
+  let rows: any = [];
+
+  for (const product of products) {
+    for (const variable of product.ProductVariable) {
+      rows.push({
+        id: `${product.id}-${variable.id}`,
+        product_id: product.id,
+        variable_id: variable.id,
+        name: product.name,
+        category: product.category,
+        brand: product.brand,
+        color: variable.color,
+        colorCode: variable.colorCode,
+        price: formatPrice(variable.price),
+        quantity: variable.stock,
+        image: variable.image,
+        imagePath: variable.imagePath,
+        selling: product.selling,
+      });
+    }
+  }
+
+  return rows
+```
+
+5. Agora para lidar com as colunas é mais complicado, ainda mais se quiser adicionar funcionalidades à mais. As colunas também se trata de um array com objetos dentro, porém você pode adicionar o parâmetro `renderCell` para adicionar um JSX dentro. Os `params` são as informações do Datagrid, então se quisermos pegar a informação de uma linha é só utilizarmos o `params.row.nomeDaVariável`. No caso abaixo eu mostro um desses parâmetros de um objeto que está dentro desse array, sabendo que nele também é bom definirmos uma largura e, algumas vezes, definir ele como `flex`, que é como é o tamanho dele de acordo com as outras células com a mesma propriedade, portanto se uma coluna tem `flex:1` e outra `flex:0.5`, a primeira terá o dobro do tamanho:
+```jsx
+{
+      field: "color",
+      headerName: "Cor",
+      minWidth: 130,
+      renderCell(params) {
+        return <ManageColor params={params} />;
+      },
+    },
+```
+*No caso acima temos o `field`, que é à qual linha ele se refere.`headerName` que é o nome que aparecerá no cabeçalho.`minWidth` que é a largura mínima em pixels e o `renderCell` que expliquei acima*
+
 
