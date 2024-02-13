@@ -1,10 +1,11 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import queryString from "query-string";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { IconType } from "react-icons";
 
 import formatCategoryName from "@/utils/Formaters/formatCategoryName";
+import LoadingScreen from "../../LoadingScreen";
 
 interface CategoriaProps {
   label: string;
@@ -19,10 +20,13 @@ export default function Categoria({
 }: CategoriaProps) {
   const router = useRouter();
   const params = useSearchParams();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = useCallback(() => {
+    setIsLoading(true);
     if (label === "Geral") {
       router.push("/");
+      setIsLoading(false);
     } else {
       let query = {};
 
@@ -38,6 +42,7 @@ export default function Categoria({
       );
 
       router.push(url);
+      setIsLoading(false);
     }
   }, [label, params, router]);
 
@@ -50,7 +55,7 @@ export default function Categoria({
           : "border-transparent text-neutral-content"
       }`}
     >
-      <Icon size={20} className="" />
+      {isLoading ? <LoadingScreen /> : <Icon size={20} />}
       <p className="font-medium text-md hidden xl:block ">
         {formatCategoryName(label)}
       </p>

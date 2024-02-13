@@ -21,8 +21,12 @@ export default async function NavBar() {
         </div>
 
         <div className=" hidden w-1/2 md:flex xl:w-1/3 justify-center items-center h-[3.5rem]">
-          <Suspense>
-          <SearchInput />
+          <Suspense
+            fallback={
+              <div className="skeleton hidden w-1/2 md:flex xl:w-1/3 justify-center items-center h-[3.5rem]"></div>
+            }
+          >
+            <SearchInput />
           </Suspense>
         </div>
 
@@ -41,13 +45,17 @@ export default async function NavBar() {
           <ThemeSelector />
         </div>
 
-        <div className="w-10/12 my-4 mx-auto px-2 flex md:hidden justify-center items-center h-[3.5rem]  ">
-          <Suspense>
+        <div className="w-10/12 my-4 mx-auto px-2 flex md:hidden justify-center items-center h-[3.5rem]">
+          <Suspense
+            fallback={
+              <div className="skeleton w-10/12 my-4 mx-auto px-2 flex md:hidden justify-center items-center h-[3.5rem]"></div>
+            }
+          >
             <SearchInput />
           </Suspense>
         </div>
 
-        <Suspense>
+        <Suspense fallback={<div className="skeleton w-full h-[40px]"></div>}>
           <NavCategories />
         </Suspense>
       </div>

@@ -6,6 +6,7 @@ import { categories } from "@/data/categories";
 
 import Categoria from "./Categoria";
 import { Suspense } from "react";
+import LoadingScreen from "../../LoadingScreen";
 
 export default function NavCategories() {
   const params = useSearchParams();
@@ -17,7 +18,7 @@ export default function NavCategories() {
   return (
     <div className={`w-full grid grid-cols-7 bg-neutral`}>
       {categories.map((categoria) => (
-        <Suspense key={categoria.label}>
+        <Suspense fallback={<LoadingScreen />} key={categoria.label}> 
           <Categoria
             label={categoria.label}
             Icon={categoria.Icon}

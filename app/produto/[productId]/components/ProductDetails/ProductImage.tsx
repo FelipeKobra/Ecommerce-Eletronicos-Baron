@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useState } from "react";
 
 interface ProductImage {
   imagens: string[];
@@ -18,11 +19,10 @@ export default function ProductImage({
           className="max-h-[30rem] py-10 lg:py-0"
           src={imagens[imageIndex]}
           alt={name}
-          sizes=""
           width={250}
           height={250}
           quality={100}
-          loading="eager"
+          priority={true}
         />
       </div>
     </div>

@@ -64,7 +64,7 @@ export default function Items({
                   stock={variavel.stock}
                 />
               </div>
-              <div className="py-6 sm:py-0 col-span-2 sm:col-span-1 flex gap-1 justify-center text-center lg:text-start text-2xl sm:text-3xl md:text-3xl lg:text-xl">
+              <div className="py-6 sm:py-0 col-span-2 sm:col-span-1 flex gap-1 justify-center lg:justify-end text-center lg:text-end text-2xl sm:text-3xl md:text-3xl lg:text-xl">
                 <p className="lg:hidden">TOTAL:</p>
                 <CartItemTotalPrice variavel={variavel} CartItems={CartItems} />
               </div>
