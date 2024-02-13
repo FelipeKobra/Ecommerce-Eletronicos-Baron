@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import React, { createContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
@@ -52,6 +53,9 @@ const calculateVolume = (arr: LocalStorageItem[]): number => {
 // // // // // // // //Provider Section // // // // // // // // // //
 
 const LocalStorageProvider = ({ children }: { children: React.ReactNode }) => {
+  const router = useRouter()
+
+
   // Load cart quantity from local storage on mount.
   const [cartVolume, setCartVolume] = useState(0);
 
@@ -174,11 +178,12 @@ const LocalStorageProvider = ({ children }: { children: React.ReactNode }) => {
       if (!currentTheme) {
         localStorage.setItem("theme", "light");
         setTema("light");
+        router.refresh()
       }
     }
 
     updateTheme();
-  }, []);
+  }, [router]);
 
   return (
     <LocalStorageContext.Provider
