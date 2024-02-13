@@ -67,6 +67,7 @@ export default function SearchInput() {
             { searchInput, take: 5 },
             { cancelToken: cancelTokenRef.current.token }
           );
+
           setProdutos(response.data);
           setIsLoading(false);
         } catch (error: any) {
@@ -75,8 +76,6 @@ export default function SearchInput() {
             throw new Error(error);
           }
         }
-
-        cancelTokenRef.current.cancel();
       })();
     }
   }, [searchInput]);
@@ -88,7 +87,7 @@ export default function SearchInput() {
         onSubmit={handleSubmit(onSubmit)}
       >
         {isFocused && isLoading && searchInput.length > 0 && (
-          <span className="absolute opacity-55 left-[-3.5rem] loading loading-spinner loading-lg"></span>
+          <span className="absolute opacity-55 left-[-2rem] md:left-[-3.5rem] loading loading-spinner loading-sm"></span>
         )}
         <input
           {...register("searchTerm")}
@@ -124,7 +123,7 @@ export default function SearchInput() {
           produtos.length > 0 &&
           produtos.map((produto) => (
             <Link
-              className="flex items-center w-full h-[5rem] bg-base-100 text-base-content rounded-sm border-2 hover:border-accent "
+              className="flex items-center w-full text-xs md:text-base h-[5rem] bg-base-100 text-base-content rounded-sm border-2 hover:border-accent "
               key={produto.id}
               href={`/produto/${produto.id}`}
               onMouseEnter={() => setIsHovered(true)}

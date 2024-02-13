@@ -81,7 +81,7 @@ export default function CheckoutMenu() {
     return () => abortController.abort();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cartItems, router, setPaymentIntentLocalStorage]);
+  }, []);
 
   const options: StripeElementsOptions = {
     clientSecret,
