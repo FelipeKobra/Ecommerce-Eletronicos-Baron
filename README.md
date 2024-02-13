@@ -72,6 +72,7 @@ Justamente por muitas vezes não saber como funciona para utilizar uma tecnologi
     - [Sumário](#sumário)
     - [Adicionar Produtos](#adicionar-produtos)
     - [Gerenciamento por Tabela](#gerenciamento-por-tabela)
+- [Observações](#observações)
 - [Agradecimento](#agradecimento)
 
 ## Instalação
@@ -1086,6 +1087,13 @@ O gerenciamento por tabela é muito mais prático e organizado do que verificar 
     },
 ```
 *No caso acima temos o `field`, que é à qual linha ele se refere.`headerName` que é o nome que aparecerá no cabeçalho.`minWidth` que é a largura mínima em pixels e o `renderCell` que expliquei acima*
+
+<hr>
+
+# Observações
+- Preferi esconder a escolha de temas para celular, pois acho que não fica condizente com a perspectiva do site e desagradável de se ver, e adicionar a escolha do tema ao clicar no usuário ficaria estranho e desnecessário ao meu veu
+- Também preferi não habilitar a troca de imagens no celular, pois como a troca funciona por `modal`, em alguns celulares isso torna incompatível com seu uso, e adicionar diretamente a escolha de arquivo ao clicar pode gerar desgaste na UX, já que o usuário pode clicar sem querer na troca de imagens, fazendo abrir a galeria sem desejar. Como isso é um site de compras e não uma rede social, também considero desnecessário seu uso em todas as plataformas
+- O uso das DataGrid para celular utilizam a scrollbar horizontal ao invés de diminuir as colunas para celular, apesar de ter que arrastar para ver todos os itens da tabela, acho melhor do que ter que ficar utilizando zoom para ver as informações na tela
 
 <hr>
 
