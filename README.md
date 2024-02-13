@@ -1,8 +1,41 @@
 # Introdução
 
-Bem vindo, sou Felipe, comecei a estudar programação faz 3 meses e esse é meu primeiro projeto "grande"
+Bem vindo, sou Felipe, comecei a estudar programação faz 3 meses. Sempre ouço as pessoas falando que é programando que se aprende a programar,e decidi ver se era verdade!
 
-Vou tentar deixar tudo o mais didático possível sobre tudo o que considero relevante para entender esse projeto se tiver alguma dificuldade em entender alguma parte. Também vou esclarecer as partes que tive mais problemas para fazer funcionar e dicas que considero útil!
+Realmente, de longe foi uma experiência muito grande que ganhei com esse projeto, já que ele possui muita interatividade por parte do usuário, cuidados de segurança e controle pela equipe de administração.
+
+Muitas vezes vejo gente que já tem conhecimento em programação sem saber como explicar como aprendeu, e, vendo depois dessa experiência, eu entendo o que eles querem dizer. Saber como utilizar as tecnologias necessárias e saber como implementá-las em um projeto é ainda mais desafiador, muitas vezes tem que pensar por um tempo, se planejar, para saber ao menos onde começar. Então boa parte do tempo passamos mais tempo pesquisando e pensando do que programando em si, e é algo que vai se desenvolvendo gradualmente.
+
+Justamente por muitas vezes não saber como funciona para utilizar uma tecnologia e por onde começar decidi fazer esse `README` mais longo, para explicar quais os momentos de maior dificuldade do projeto e como considero ser a forma mais correta de utilizar as ferramentas que temos disponível. Vou tentar deixar tudo o mais didático possível sobre o que considero relevante para entender nesse projeto, caso tenha alguma dificuldade em entender alguma parte.
+
+## Tecnologias e Aprendizados
+
+### Tecnologias
+- Next.js
+- React.js
+- Node.js
+- NextAuth
+- Prisma
+
+### FrontEnd
+- ✅ Responsividade em todo o site
+- ✅ Uso de tabelas interativas
+- ✅ Carrossel responsivo
+- ✅ Mudança de Temas
+- ✅ Interativdade na escolha do produto
+- ✅ Troca de Foto de Perfil
+- ✅ Sistema de Login
+- ✅ Utilização e controle do LocalStorage
+- ✅ Sistema de controle de estoque
+
+### Backend
+- ✅ Rotas API
+- ✅ Interação com Firebase
+- ✅ Gerenciamento do Banco de Dados
+- ✅ Middlewares para controle de acesso
+- ✅ Credenciamento Local
+- ✅ Sistema de pagamento funcional
+- ✅ Criação de Enpoints para Webhooks
 
 ## Lista de Conteúdo
 - [Introdução](#introdução)
@@ -32,6 +65,14 @@ Vou tentar deixar tudo o mais didático possível sobre tudo o que considero rel
     - [Stripe API](#stripe-api)
     - [Stripe Elements](#stripe-elements)
     - [Stripe Webhook](#stripe-webhook)
+  - [Controle de Acesso](#controle-de-acesso)
+    - [NextAuth](#nextauth)
+    - [Middleware](#middleware)
+  - [Admin Dashboard](#admin-dashboard)
+    - [Sumário](#sumário)
+    - [Adicionar Produtos](#adicionar-produtos)
+    - [Gerenciamento por Tabela](#gerenciamento-por-tabela)
+- [Agradecimento](#agradecimento)
 
 ## Instalação
 
@@ -1046,4 +1087,7 @@ O gerenciamento por tabela é muito mais prático e organizado do que verificar 
 ```
 *No caso acima temos o `field`, que é à qual linha ele se refere.`headerName` que é o nome que aparecerá no cabeçalho.`minWidth` que é a largura mínima em pixels e o `renderCell` que expliquei acima*
 
+<hr>
 
+# Agradecimento
+Boa parte do aprendizado foi possível por meio das documentações e vídeos de [chaoocharles](https://github.com/chaoocharles), que é um programador do 🇰🇪 Kenya especializado em React e Node.js.
