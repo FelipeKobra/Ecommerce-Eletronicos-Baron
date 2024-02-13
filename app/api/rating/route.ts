@@ -1,6 +1,6 @@
 
 import { NextResponse } from "next/server";
-
+import prisma from "@/libs/prismaDb"
 import checkAuthToReview from "@/utils/functions/checkAuthToReview";
 import getCurrentUser from "@/utils/interfaces/getPrismaItems/getCurrentUser";
 import { ProductType } from "@/utils/interfaces/getPrismaItems/getProductById";
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       NextResponse.error();
     }
 
-    const review = await prisma?.productReview.create({
+    const review = await prisma.productReview.create({
       data: { comment, rating, productId: product!.id, userId },
     });
 

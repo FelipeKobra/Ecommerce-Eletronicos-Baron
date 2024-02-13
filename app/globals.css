@@ -64,6 +64,10 @@
   color: oklch(var(--bc)) !important;
 }
 
+.MuiRating-root{
+  color:yellow;
+}
+
 /* Small devices (landscape phones, 640px and up) */
 @media (min-width: 640px) {
   .embla__container {

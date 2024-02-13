@@ -18,6 +18,7 @@ export default function ProductReviewsRating({
     <div>
       <p className="my-2 text-xl lg:text-lg">Nota</p>
       <Rating
+      color="#f6ea0fF"
       size="large"
         value={rating}
         onChange={(event, newValue) => {

@@ -29,7 +29,7 @@ export default async function ProductReviewsOnSubmit({
   setIsLoading(true);
   try {
     if (user && product) {
-      toast("Avialiação Enviada");
+      toast("Avialiação Enviada, aguarde!");
       const ratingData: bodyRatingProps = {
         comment: data.comment,
         rating: data.rating,
