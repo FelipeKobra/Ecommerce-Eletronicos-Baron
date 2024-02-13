@@ -15,19 +15,31 @@ interface HomeProps {
   searchParams: getProductsProps;
 }
 
-export default async function Home({ searchParams }: HomeProps) {
+export default async function page({ searchParams }: HomeProps) {
   let take: undefined | number = undefined;
   if (Object.keys(searchParams).length <= 0) take = 15;
-  const [produtos, lancamentos, destaques] = await Promise.all([
-    getProducts({ ...searchParams, take: take, selling: true }),
-    getProducts({
+  let produtos, lancamentos, destaques;
+
+  if (!Object.keys(searchParams).length) {
+    [produtos, lancamentos, destaques] = await Promise.all([
+      getProducts({ ...searchParams, take: take, selling: true }),
+      getProducts({
+        ...searchParams,
+        take: 15,
+        dateOrder: "desc",
+        selling: true,
+      }),
+      getHighlightProducts(),
+    ]);
+  }
+
+  if (Object.keys(searchParams).length > 0) {
+    produtos = await getProducts({
       ...searchParams,
-      take: 15,
-      dateOrder: "desc",
+      take: take,
       selling: true,
-    }),
-    getHighlightProducts(),
-  ]);
+    });
+  }
 
   if (!produtos || produtos.length <= 0) {
     return (
@@ -53,31 +65,33 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <div className="flex  flex-col gap-5 justify-center items-center">
-      {!Object.keys(searchParams).length && (
-        <>
-          <div className="w-full justify-center items-center ">
-            <Banner />
-          </div>
-
-          <div className="w-11/12 relative flex flex-col">
-            <div className="flex gap-1 absolute top-0 left-0 text-3xl">
-              <MdBolt className="text-primary" />
-              <p>LANÇAMENTOS</p>
+      {!Object.keys(searchParams).length &&
+        lancamentos !== undefined &&
+        destaques !== undefined && (
+          <>
+            <div className="w-full justify-center items-center ">
+              <Banner />
             </div>
 
-            <SwiperCarousel produtos={lancamentos} />
-          </div>
+            <div className="w-11/12 relative flex flex-col">
+              <div className="flex gap-1 absolute top-0 left-0 text-3xl">
+                <MdBolt className="text-primary" />
+                <p>LANÇAMENTOS</p>
+              </div>
 
-          <div className="w-11/12 relative flex flex-col ">
-            <div className="flex gap-1 absolute top-0 left-0 text-3xl">
-              <MdShoppingBasket className="text-primary" />
-              <p>MAIS VENDIDOS</p>
+              <SwiperCarousel produtos={lancamentos} />
             </div>
 
-            <SwiperCarousel produtos={destaques} />
-          </div>
-        </>
-      )}
+            <div className="w-11/12 relative flex flex-col ">
+              <div className="flex gap-1 absolute top-0 left-0 text-3xl">
+                <MdShoppingBasket className="text-primary" />
+                <p>MAIS VENDIDOS</p>
+              </div>
+
+              <SwiperCarousel produtos={destaques} />
+            </div>
+          </>
+        )}
 
       <div className="w-11/12 relative justify-center items-center flex flex-col">
         {!Object.keys(searchParams).length && (

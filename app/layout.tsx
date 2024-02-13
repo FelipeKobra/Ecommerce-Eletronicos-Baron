@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { Toaster } from "react-hot-toast";
+import NextTopLoader from "nextjs-toploader";
 
 import LocalStorageProvider from "@/utils/providers/LocalStorageProvider";
 
@@ -29,6 +30,11 @@ export default function RootLayout({
   return (
     <html lang="pt-br" className={poppins.className}>
       <body className="flex flex-col min-h-screen">
+        <NextTopLoader
+          color="oklch(var(--p))"
+          showSpinner={false}
+          shadow="0 0 10px oklch(var(--p)),0 0 5px oklch(var(--p))"
+        />
         <Toaster
           toastOptions={{
             style: { background: "rgb(51 65 85)", color: "#fff" },
