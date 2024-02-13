@@ -23,9 +23,6 @@ const nextConfig = {
       { protocol: "https", hostname: "t4.ftcdn.net", port: "" },
     ],
   },
-  experimental:{
-    missingSuspenseWithCSRBailout: false,
-  }
 };
 
 module.exports = nextConfig;

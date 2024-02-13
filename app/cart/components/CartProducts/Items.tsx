@@ -44,7 +44,7 @@ export default function Items({
                   <CartItemImage produto={produto} variavel={variavel} />
                 </div>
 
-                <div className="col-span-2 flex flex-col gap-3  lg:items-start">
+                <div className="col-span-2 flex flex-col gap-3 font-light lg:font-normal lg:items-start">
                   <CartItemInfo
                     produto={produto}
                     variavel={variavel}

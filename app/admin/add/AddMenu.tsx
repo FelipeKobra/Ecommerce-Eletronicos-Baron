@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
-
 import { categories } from "@/data/categories";
 
 import AddFormButton from "./components/AddFormButton";
@@ -16,8 +15,6 @@ import RemoveImageBg from "./components/RemoveImageBg";
 import { schema, AddForm } from "./components/zodConfig/schemas";
 import { variables } from "./data/variables";
 import onSubmit from "./utils/onSubmitAdd";
-
-
 
 export const maxPrice = 1000000;
 export const maxStock = 1000;

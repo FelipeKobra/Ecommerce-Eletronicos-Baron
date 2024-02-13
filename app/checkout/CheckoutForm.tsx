@@ -65,7 +65,7 @@ export default function CheckoutForm({
     setLoading(false);
   }
 
-  return (
+if(stripe && clientSecret && clientSecret.length > 3)  return (
     <form
       onSubmit={onSubmit}
       className="w-11/12 md:w-10/12 lg:w-3/4 my-[5rem] shadow-2xl p-[2rem] lg:p-[5rem] "
