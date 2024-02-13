@@ -66,7 +66,7 @@ export default function ProductDetails({ produto }: { produto: ProductType }) {
     produto &&
       setCartLocalStorage({
         productId: produto.id,
-        quantity: quantidade,
+        quantity: quantidade + cartQuantity,
         color: variavelAtual.color,
       });
     toast.success("Produto Adicionado Com Sucesso");
