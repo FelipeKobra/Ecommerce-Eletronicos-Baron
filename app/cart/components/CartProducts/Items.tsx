@@ -33,7 +33,7 @@ export default function Items({
 
       if (produto && variavel) {
         return (
-          <div key={produto.id}>
+          <div key={variavel.id}>
             <hr />
             <div
               className="grid grid-cols-2 lg:grid-cols-5 justify-center items-center text-2xl lg:text-xl my-4 lg:px-[4rem]"

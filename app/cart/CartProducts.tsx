@@ -14,10 +14,9 @@ import Items from "./components/CartProducts/Items";
 import NoItemPage from "./components/CartProducts/NoItemPage";
 
 import LoadingScreen from "../components/LoadingScreen";
-import { useRouter } from "next/navigation";
+
 
 export default function CartProducts({ user }: { user: boolean }) {
-  const router = useRouter();
 
   const {
     cartItems: CartItems,
@@ -29,7 +28,6 @@ export default function CartProducts({ user }: { user: boolean }) {
   const removeItemHandler = (e: MouseEvent<HTMLButtonElement>) => {
     const { name: cor, value: productId } = e.target as HTMLButtonElement;
     removeItem?.(productId, cor);
-    router.refresh();
   };
 
   const [produtosDoCarrinho, setProdutosDoCarrinho] =
@@ -41,6 +39,7 @@ export default function CartProducts({ user }: { user: boolean }) {
   // First useEffect to fetch data
   useEffect(() => {
     (async function handleProdutosDoCarrinho() {
+      console.log(CartItems)
       if (CartItems && CartItems.length > 0) {
         if (CartItemsCountRef.current !== CartItems.length) {
           setIsLoading(true);

@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import React, { createContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { any } from "zod";
 
 // Key of the cart data in local storage.
 const CART_KEY = "Cart";
@@ -20,8 +21,12 @@ export type LocalStorageContextType = {
   tema: string;
   cartVolume: number;
   cartItems: LocalStorageItem[] | null;
-  getLocalStorage: () => LocalStorageItem[] | null;
-  setCartLocalStorage: (value: LocalStorageItem) => void;
+  setCartItems: any;
+  changeCartItemQuantity: (
+    productId: string,
+    color: string,
+    quantity: number
+  ) => void;
   updateCartQuantity: (value: LocalStorageItem) => void;
   removeLocalStorage: () => void;
   removeItem: (id: string, color: string) => void;
@@ -35,8 +40,12 @@ export const LocalStorageContext = createContext<LocalStorageContextType>({
   tema: "",
   cartVolume: 0,
   cartItems: null,
-  getLocalStorage: () => null,
-  setCartLocalStorage: (value: LocalStorageItem) => {},
+  setCartItems: any,
+  changeCartItemQuantity: (
+    productId: string,
+    color: string,
+    quantity: number
+  ) => {},
   updateCartQuantity: (value: LocalStorageItem) => {},
   removeLocalStorage: () => {},
   removeItem: (id: string, color: string) => {},
@@ -55,68 +64,41 @@ const calculateVolume = (arr: LocalStorageItem[]): number => {
 const LocalStorageProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
-  // Load cart quantity from local storage on mount.
-  const [cartVolume, setCartVolume] = useState(0);
-
-  useEffect(() => {
-    const localStorageValue = localStorage.getItem(CART_KEY);
-    if (localStorageValue) {
-      const parsedData: LocalStorageItem[] = JSON.parse(localStorageValue);
-      if (Array.isArray(parsedData)) {
-        const volume = calculateVolume(parsedData);
-        setCartVolume(volume);
-      }
-    }
-  }, []);
-
   //Load cart items and update when cartVolume changes
   const [cartItems, setCartItems] = useState<LocalStorageItem[] | null>(null);
 
   useEffect(() => {
-    const localStorageValue = localStorage.getItem(CART_KEY);
+    if (!cartItems) {
+      const cartStorage = localStorage.getItem(CART_KEY);
+      if (cartStorage) {
+        const parsedCartStorage = JSON.parse(cartStorage);
+      if (JSON.stringify(parsedCartStorage) !== JSON.stringify(cartItems)) {
+        setCartItems(parsedCartStorage);
+      }
+      }
+    }
+  }, [cartItems]);
 
-    const parsedData: LocalStorageItem[] | null = localStorageValue
-      ? JSON.parse(localStorageValue)
-      : null;
+  useEffect(() => {
+    const cartStorage = localStorage.getItem(CART_KEY);
+    if (cartItems && cartItems.length > 0)
+    if (JSON.stringify(cartItems) !== cartStorage) {
+      localStorage.setItem(CART_KEY, JSON.stringify(cartItems));
+    }
+  }, [cartItems]);
 
-    setCartItems(parsedData);
-  }, [cartVolume]);
+  // Load cart quantity from local storage on mount.
+  const [cartVolume, setCartVolume] = useState(0);
+
+  useEffect(() => {
+    if (cartItems) {
+      setCartVolume(calculateVolume(cartItems));
+    } else {
+      setCartVolume(0);
+    }
+  }, [cartItems]);
 
   // // // // // // // // //Local Storage Section // // // // // // // // // //
-
-  // Helper function to handle localStorage.
-  const handleLocalStorage = (
-    action: (items: LocalStorageItem[]) => LocalStorageItem[]
-  ): void => {
-    const raw = localStorage.getItem(CART_KEY);
-    let items: LocalStorageItem[] = raw ? JSON.parse(raw) : [];
-    items = action(items);
-    localStorage.setItem(CART_KEY, JSON.stringify(items));
-    const volume = calculateVolume(items);
-    setCartVolume(volume);
-  };
-
-  // Get the local storage items
-  const getLocalStorage = (): LocalStorageItem[] | null => {
-    const raw = localStorage.getItem(CART_KEY);
-    return raw ? JSON.parse(raw) : null;
-  };
-
-  // Set the local storage items
-  const setCartLocalStorage = (value: LocalStorageItem): void => {
-    handleLocalStorage((items) => {
-      const existingIndex = items.findIndex(
-        (item) =>
-          item.productId === value.productId && item.color === value.color
-      );
-      if (existingIndex !== -1) {
-        items[existingIndex].quantity = value.quantity;
-      } else {
-        items.push(value);
-      }
-      return items;
-    });
-  };
 
   //set payment intent on Local Storage
   function setPaymentIntentLocalStorage(value: string | null) {
@@ -125,32 +107,78 @@ const LocalStorageProvider = ({ children }: { children: React.ReactNode }) => {
   }
   //Update the local storage items quantity
   const updateCartQuantity = (value: LocalStorageItem): void => {
-    handleLocalStorage((items) => {
-      const item = items.find(
+    if (cartItems) {
+      const newItem = cartItems.find(
         (item) =>
           item.productId === value.productId && item.color === value.color
       );
-      if (item && value.inputName) {
-        item.quantity += value.inputName === "add" ? 1 : -1;
+
+      if (newItem && value.inputName) {
+        newItem.quantity += value.inputName === "add" ? 1 : -1;
+
+        const newItemIndex = cartItems.findIndex(
+          (item) =>
+            item.productId === value.productId && item.color === value.color
+        );
+
+        const newCartItems = cartItems.map((item, index) =>
+          index === newItemIndex ? newItem : item
+        );
+
+        setCartItems(newCartItems);
       }
-      return items;
-    });
+    }
   };
+
+  function changeCartItemQuantity(
+    productId: string,
+    color: string,
+    quantity: number
+  ) {
+    if (cartItems) {
+      const newCartItem = cartItems.find(
+        (item) => item.productId === productId && item.color === color
+      );
+      const newCartItemIndex = cartItems.findIndex(
+        (item) => item.productId === productId && item.color === color
+      );
+
+      if (newCartItem) {
+        newCartItem.quantity = quantity;
+
+        const newCartItems = cartItems.map((item, index) =>
+          index === newCartItemIndex ? newCartItem : item
+        );
+
+        setCartItems(newCartItems);
+      }
+    }
+  }
 
   // Delete the Local storage Cart Item
   const removeLocalStorage = (): void => {
+    setCartItems(null);
     localStorage.removeItem(CART_KEY);
-    setCartVolume(0);
+    router.refresh();
   };
 
   // Delete a specific item
   const removeItem = (id: string, color: string): void => {
-    handleLocalStorage((items) => {
-      return items.filter(
-        (item) => item.productId !== id || item.color !== color
-      );
-    });
-    toast.error("Produto Removido");
+    if (cartItems) {
+      if (cartItems.length > 1) {
+        const newCartItems = cartItems?.filter(
+          (item) => item.productId !== id || item.color !== color
+        );
+
+        setCartItems(newCartItems);
+      } else if ((cartItems.length = 1)) {
+        setCartItems(null);
+        localStorage.removeItem(CART_KEY);
+      }
+
+      toast.error("Produto Removido");
+      router.refresh();
+    }
   };
 
   // // // // // // // // //Payment Intent Section ////////////////
@@ -187,12 +215,12 @@ const LocalStorageProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <LocalStorageContext.Provider
       value={{
-        setTema,
         tema,
+        setTema,
         cartVolume,
         cartItems,
-        getLocalStorage,
-        setCartLocalStorage,
+        setCartItems,
+        changeCartItemQuantity,
         updateCartQuantity,
         removeLocalStorage,
         removeItem,
