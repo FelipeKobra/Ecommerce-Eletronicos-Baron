@@ -501,7 +501,7 @@ O Provider é basicamente um conjunto de funções e variáveis que você pode u
     </html>
    ```
 
-5. É muito importante ressaltar que essas variáveis não permanecem com seus valores para todos os componentes, apenas para o componente que pegou a variável pelo `useContext` e seus componentes filhos, ou seja, se você alterou o valor do tema em uma página ele não mudara seu `State`. Por isso utilizamos o LocalStorage para guardar essas variáveis, para termos persistência de valores por toda a aplicação.
+5. No meu caso eu pego utilizo as variáveis do `useContext` apenas para manipular as informações que eu adicionei no LocalStorage, porém, o recomendado, é você utilizar essas variáveis sem serem pegas do LocalStorage toda vez que entra em uma página, somente adicionar/alterar os elementos no LocalStorage, quando altera esses elementos. Também é uma boa ideia tentar pegar o valor de uma variável vazia do LocalStorage sempre que inicia uma nova aba/página, já que isso permite manter as informações do `useContext` sempre atualizadas. Todas essas alterações estão na segunda `branch`.
 
 6. Outra atitude importante é que apesar de o uso do LocalStorage ser síncrono temos que esperar o site montar para conseguirmos utilizá-lo, então não temos como utilizar `useState(localStorage.getItem("Cart"))`, por exemplo, isso dá erro e, mesmo que funcione, torna a utilização dessa variável instável, então, para utiliza-la, temos que, primeiro declarar um state vazio ou com uma variável correspondente ao valor que será pego do *LocalStorage* e utilizar o `useEffect` para declarar essa variável, por isso que em meu Provider você verá muitos `useEffect`, que deixei separado para cada variável 
 
