@@ -18,36 +18,36 @@ export default function CartQuantityChanger({
   quantidade,
 }: QuantityChanger) {
   const {
-    cartVolume,
-    getLocalStorage,
+    cartItems,
+    setCartItems,
+    changeCartItemQuantity,
     updateCartQuantity,
-    setCartLocalStorage,
   } = useContext(LocalStorageContext);
 
   const [quantity, setQuantity] = useState(quantidade);
 
   useEffect(() => {
-    const cartQuantity = getLocalStorage()?.find(
-      (item) => item.productId === productid
-    )?.quantity;
+    if (cartItems) {
+      const cartQuantity = cartItems.find(
+        (item) => item.productId === productid
+      )?.quantity;
 
-    if (quantity <= 0 || (cartQuantity && cartQuantity <= 0)) {
-      setCartLocalStorage({ color, productId: productid, quantity: 1 });
-      setQuantity(1);
+      if (
+        (quantity <= 0 || (cartQuantity && cartQuantity <= 0)) &&
+        quantity !== 1
+      ) {
+        changeCartItemQuantity(productid, color, 1);
+        setQuantity(1);
+      }
+      if (
+        (quantity > stock || (cartQuantity && cartQuantity > stock)) &&
+        quantity !== stock
+      ) {
+        changeCartItemQuantity(productid, color, stock);
+        setQuantity(stock);
+      }
     }
-    if (quantity > stock || (cartQuantity && cartQuantity > stock)) {
-      setCartLocalStorage({ color, productId: productid, quantity: stock });
-      setQuantity(stock);
-    }
-  }, [
-    color,
-    productid,
-    stock,
-    quantity,
-    cartVolume,
-    setCartLocalStorage,
-    getLocalStorage,
-  ]);
+  }, [cartItems, changeCartItemQuantity, color, productid, quantity, stock]);
 
   function alterarQuantidade(e: React.MouseEvent<HTMLButtonElement>) {
     const sinal = (e.target as HTMLButtonElement).name;

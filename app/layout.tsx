@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import NextTopLoader from "nextjs-toploader";
+import "./globals.css"
 
 import LocalStorageProvider from "@/utils/providers/LocalStorageProvider";
 

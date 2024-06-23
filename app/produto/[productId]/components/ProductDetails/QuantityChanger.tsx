@@ -22,7 +22,7 @@ export default function QuantityChanger({
 
   useEffect(() => {
     if (quantidadeTotal > stock) {
-      let newQuantidade = Math.min(quantidade, stock - cartQuantity) + 1;
+      let newQuantidade = Math.min(quantidade, stock - cartQuantity) + 1
       if (newQuantidade + cartQuantity > stock) {
         newQuantidade = 1;
       }

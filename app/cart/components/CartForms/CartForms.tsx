@@ -47,7 +47,7 @@ export default function CartForms({
       </div>
 
       <p className="w-full text-sm">Impostos e frete calculados no Checkout</p>
-      <Link className="w-full h-[3rem]" href={user ? "/checkout" : "login"}>
+      <Link className="w-full h-[3rem]" href={user ? "checkout" : "login"}>
         <button
           className={`h-full w-full rounded-md text-xl ${
             user

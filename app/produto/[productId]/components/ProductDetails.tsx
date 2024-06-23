@@ -1,11 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 
 import { ProductType } from "@/utils/interfaces/getPrismaItems/getProductById";
-import { LocalStorageContext } from "@/utils/providers/LocalStorageProvider";
+import {
+  LocalStorageContext,
+  LocalStorageItem,
+} from "@/utils/providers/LocalStorageProvider";
 
 import HorizontalRuleDesc from "./ProductDetails/HorizontalRuleDesc";
 import ProductButton from "./ProductDetails/ProductButton";
@@ -18,8 +21,11 @@ import ProductTitle from "./ProductDetails/ProductTitle";
 import QuantityChanger from "./ProductDetails/QuantityChanger";
 
 export default function ProductDetails({ produto }: { produto: ProductType }) {
+  //Router
+  const router = useRouter();
+
   //Context And CartQuantity Declare
-  const { getLocalStorage, setCartLocalStorage, cartVolume } =
+  const { cartItems, setCartItems, changeCartItemQuantity, cartVolume } =
     useContext(LocalStorageContext);
 
   //States
@@ -45,8 +51,7 @@ export default function ProductDetails({ produto }: { produto: ProductType }) {
   );
 
   useEffect(() => {
-    const productsInCart = getLocalStorage();
-    if (!productsInCart) {
+    if (!cartItems) {
       setCartQuantity(0);
       return;
     }
@@ -54,70 +59,106 @@ export default function ProductDetails({ produto }: { produto: ProductType }) {
     if (!produto) return;
 
     // Encontra o produto com a mesma ID e cor no carrinho
-    const produtoNoCarrinho = productsInCart.find(
+    const produtoNoCarrinho = cartItems.find(
       (e) => e.productId === produto.id && e.color === variavelAtual.color
     );
 
     setCartQuantity(produtoNoCarrinho?.quantity || 0);
-  }, [cartVolume, getLocalStorage, imageIndex, variavelAtual.color, produto]);
+  }, [cartVolume, cartItems, imageIndex, variavelAtual.color, produto]);
 
   //Add to Cart
-  function addToCart() {
-    produto &&
-      setCartLocalStorage({
-        productId: produto.id,
-        quantity: quantidade + cartQuantity,
-        color: variavelAtual.color,
-      });
-    toast.success("Produto Adicionado Com Sucesso");
-    setIsAdded(true);
-    router.push("/cart");
-  }
+  const addToCart = useCallback(() => {
+    if (produto) {
+      const itemExists = cartItems?.find(
+        (item) =>
+          item.productId === produto.id && item.color === variavelAtual.color
+      );
 
-  //Router
-  const router = useRouter();
+      if (itemExists) {
+        changeCartItemQuantity(
+          produto.id,
+          variavelAtual.color,
+          itemExists.quantity + quantidade
+        );
+      } else {
+        setCartItems((prev: LocalStorageItem[]) => {
+          if (!Array.isArray(prev)) {
+            return [
+              {
+                productId: produto.id,
+                color: variavelAtual.color,
+                quantity: quantidade,
+              },
+            ];
+          } else {
+            return [
+              ...prev,
+              {
+                productId: produto.id,
+                color: variavelAtual.color,
+                quantity: quantidade,
+              },
+            ];
+          }
+        });
+      }
+      toast.success("Produto Adicionado Com Sucesso");
+      setIsAdded(true);
+      router.push("/cart");
+    }
+  }, [
+    cartItems,
+    changeCartItemQuantity,
+    produto,
+    quantidade,
+    router,
+    setCartItems,
+    variavelAtual.color,
+  ]);
 
- if(produto) return (
-    <div className=" w-full grid grid-cols-2 my-8">
-      <ProductImage
-        imagens={imagens}
-        imageIndex={imageIndex}
-        name={produto.name}
-      />
-
-      <div className="col-span-2 lg:col-span-1 px-10 lg:p-0 my-10 lg:m-0 flex flex-col gap-4">
-        <ProductTitle name={produto.name} price={variavelAtual.price} />
-        <ProductRating notaFinal={notaFinalProduto} notas={notasProduto} />
-        <ProductDescription produto={produto} />
-        <ProductInfo
-          categoria={produto.category}
-          brand={produto.brand}
-          stock={variavelAtual.stock}
-        />
-        <HorizontalRuleDesc />
-        <ProductColorSelector
-          variaveis={variaveis}
+  if (produto)
+    return (
+      <div className=" w-full grid grid-cols-2 my-8">
+        <ProductImage
+          imagens={imagens}
           imageIndex={imageIndex}
-          setImageIndex={setImageIndex}
+          name={produto.name}
         />
-        <HorizontalRuleDesc />
-        <QuantityChanger
-          selling={produto.selling}
-          quantidade={quantidade}
-          stock={variavelAtual.stock}
-          setQuantidade={setQuantidade}
-          cartQuantity={cartQuantity}
-        />
-        <div className="mt-5 h-14 w-full sm:w-10/12 md:w-1/2">
-          <ProductButton
-            selling={produto.selling}
-            cartQuantity={cartQuantity}
-            isAdded={isAdded}
-            addToCart={addToCart}
+
+        <div className="col-span-2 lg:col-span-1 px-10 lg:p-0 my-10 lg:m-0 flex flex-col gap-4">
+          <ProductTitle name={produto.name} price={variavelAtual.price} />
+          <ProductRating notaFinal={notaFinalProduto} notas={notasProduto} />
+          <ProductDescription produto={produto} />
+          <ProductInfo
+            categoria={produto.category}
+            brand={produto.brand}
             stock={variavelAtual.stock}
           />
+          <HorizontalRuleDesc />
+          <ProductColorSelector
+            variaveis={variaveis}
+            imageIndex={imageIndex}
+            setImageIndex={setImageIndex}
+          />
+          <HorizontalRuleDesc />
+          <QuantityChanger
+            selling={produto.selling}
+            quantidade={quantidade}
+            stock={variavelAtual.stock}
+            setQuantidade={setQuantidade}
+            cartQuantity={cartQuantity}
+          />
+          <div className="mt-5 h-14 w-full sm:w-10/12 md:w-1/2">
+            <ProductButton
+              key={produto.id}
+              selling={produto.selling}
+              cartQuantity={cartQuantity}
+              isAdded={isAdded}
+              addToCart={addToCart}
+              stock={variavelAtual.stock}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
 }

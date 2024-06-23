@@ -1,6 +1,5 @@
 "use client";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
-import DangerousRoundedIcon from "@mui/icons-material/DangerousRounded";
+import { MdDangerous,MdCheckCircle } from "react-icons/md";
 
 interface ProductButton {
   isAdded: boolean;
@@ -24,9 +23,9 @@ export default function ProductButton({
       return (
         <>
           <div className="flex items-center">
-            <DangerousRoundedIcon
-              className="text-error mr-4"
-              fontSize="large"
+            <MdDangerous
+              className="text-error mr-4 "
+              size={30}
             />
             <p className="text-lg"> Limite de Estoque Atingido no Carrinho</p>
           </div>
@@ -45,9 +44,9 @@ export default function ProductButton({
           </button>
         ) : (
           <div className="flex items-center">
-            <CheckCircleRoundedIcon
+            <MdCheckCircle
               className="text-success mr-4"
-              fontSize="large"
+            size={30}
             />
             <p className="text-lg"> Produto Adicionado ao Carrinho</p>
           </div>
@@ -58,7 +57,7 @@ export default function ProductButton({
     return (
       <>
         <div className="flex items-center">
-          <DangerousRoundedIcon className="text-error mr-4" fontSize="large" />{" "}
+          <MdDangerous className="text-error mr-4" size={30} />
           <p className="text-lg"> Produto Não está À Venda</p>
         </div>
       </>
@@ -67,7 +66,7 @@ export default function ProductButton({
     return (
       <>
         <div className="flex items-center">
-          <DangerousRoundedIcon className="text-error mr-4" fontSize="large" />{" "}
+          <MdDangerous className="text-error mr-4" size={30} />
           <p className="text-lg"> Produto Fora de Estoque</p>
         </div>
       </>
