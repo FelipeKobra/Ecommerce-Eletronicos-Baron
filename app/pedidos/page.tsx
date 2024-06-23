@@ -21,8 +21,6 @@ export default async function page() {
   }
 
   const orders = await getOrdersByUserId(user.id);
-  console.log(user.id)
-  console.log(orders)
 
   return (
     <div className="w-full h-full mx-auto ">

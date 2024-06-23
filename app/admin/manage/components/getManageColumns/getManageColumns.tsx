@@ -25,7 +25,7 @@ export default function getManageColumns({
       minWidth: 220,
       editable: true,
     },
-    { field: "name", headerName: "Nome", width: 240 },
+    { field: "name", headerName: "Nome", width: 240, editable: true },
     {
       field: "category",
       headerName: "Categoria",

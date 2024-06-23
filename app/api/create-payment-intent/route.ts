@@ -43,7 +43,6 @@ export async function POST(req: Request) {
 
   const total = Math.round(itemTotalPrice * 100);
   if (total === 0) {
-    console.log("aqui");
     return NextResponse.json(
       { error: "O carrinho está vazio" },
       { status: 400 }

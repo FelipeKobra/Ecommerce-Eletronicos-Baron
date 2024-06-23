@@ -10,7 +10,6 @@ export default async function getOrdersByUserId(userId: string) {
       include: { user: true },
       orderBy: { createDate: "desc" },
     });
-    console.log(orders)
     if(!orders) return null
     return orders;
   } catch (error: any) {

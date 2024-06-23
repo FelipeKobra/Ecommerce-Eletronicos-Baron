@@ -1,15 +1,15 @@
-import imglyRemoveBackground from "@imgly/background-removal";
+import { removeBackground } from "@imgly/background-removal";
 
-const removeBackground = async (image: File | null) => {
+const removesBackground = async (image: File | null) => {
   if (image) {
-    return await imglyRemoveBackground(image);
+    return await removeBackground(image);
   }
 };
 
 export default async function backgroundRemover(imageArray: (File | null)[]) {
   try {
     if (imageArray) {
-      const promises = imageArray.map((image) => removeBackground(image));
+      const promises = imageArray.map((image) => removesBackground(image));
       const result = await Promise.all(promises);
 
       return result;

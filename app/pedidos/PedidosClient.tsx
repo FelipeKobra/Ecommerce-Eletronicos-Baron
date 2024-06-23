@@ -20,7 +20,6 @@ export default function PedidosClient({
   orders: OrdersByUserIdType;
 }) {
   const router = useRouter();
-  console.log
 
   const MOBILE_COLUMNS = useMemo(() => {
     return {

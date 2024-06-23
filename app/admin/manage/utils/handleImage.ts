@@ -1,4 +1,4 @@
-import removeBackground from "@imgly/background-removal";
+import { removeBackground } from "@imgly/background-removal";
 import axios from "axios";
 import {
   ref,
