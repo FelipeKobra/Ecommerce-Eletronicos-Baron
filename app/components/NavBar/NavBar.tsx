@@ -30,7 +30,7 @@ export default async function NavBar() {
           </Suspense>
         </div>
 
-        <div className="flex w-1/4 xl:w-1/3 my-auto flex-nowrap justify-end items-center sm:pr-4 md:pr-10">
+        <div className="flex w-1/4 xl:w-1/3 flex-nowrap justify-end items-center gap-10 xl:gap-16 pr-10">
           <div className="block md:hidden lg:block lg:mr-[-2rem]">
             <ThemeSelector />
           </div>

@@ -22,7 +22,7 @@ export default function QuantityChanger({
 
   useEffect(() => {
     if (quantidadeTotal > stock) {
-      let newQuantidade = Math.min(quantidade, stock - cartQuantity) + 1
+      let newQuantidade = Math.min(quantidade, stock - cartQuantity) + 1;
       if (newQuantidade + cartQuantity > stock) {
         newQuantidade = 1;
       }
@@ -61,6 +61,7 @@ export default function QuantityChanger({
           -
         </button>
         <p>{quantidade}</p>
+
         <button
           name="aumentar"
           onClick={alterarQuantidade}
@@ -69,7 +70,7 @@ export default function QuantityChanger({
           +
         </button>
         {stock === quantidadeTotal && (
-          <p className="text-error">Limite do Estoque Atingido</p>
+          <p className="text-error text-xs sm:text-base">Limite Atingido</p>
         )}
       </div>
     );

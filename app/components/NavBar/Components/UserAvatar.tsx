@@ -31,8 +31,8 @@ export default function UserAvatar({
   const matches = useMediaQuery(theme.breakpoints.up("md"));
 
   return (
-    <div className="my-auto pr-3 md:pr-0 dropdown dropdown-bottom dropdown-end lg:dropdown-hover z-50">
-      <div tabIndex={0} role="button" className=" avatar cursor-pointer">
+    <div className="dropdown dropdown-bottom dropdown-end lg:dropdown-hover z-50 flex items-center">
+      <div tabIndex={0} role="button" className="avatar cursor-pointer">
         <div className="w-10 rounded-full ring ring-primary">
           <Image
             src={imagem}

@@ -9,13 +9,15 @@ import { LocalStorageContext } from "@/utils/providers/LocalStorageProvider";
 export default function ShoppingCart() {
   const { cartVolume } = useContext(LocalStorageContext);
   return (
-    <div className="relative ">
-      <Link href="/cart" className="  mx-8 sm:mx-12 xl:mx-20 ">
+    <div>
+      <Link href="/cart" className="relative">
         <ShoppingCartIcon className="text-base-content" fontSize="large" />
+        <span
+          className={`absolute ${cartVolume > 99 && "text-xs"} bottom-4 right-4 select-none rounded-full h-6 w-6 bg-primary text-base-100 flex items-center justify-center`}
+        >
+          {cartVolume}
+        </span>
       </Link>
-      <span className={`absolute ${cartVolume > 99 && 'text-xs'} top-[-8px] right-1/3 select-none rounded-full h-6 w-6 bg-primary text-base-100 flex items-center justify-center`}>
-        {cartVolume}
-      </span>
     </div>
   );
 }
